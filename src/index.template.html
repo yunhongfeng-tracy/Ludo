@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f4f1e8">
+  <meta name="description" content="一场轻松的 Ludo 棋局。与电脑对战，离线也能玩。">
+  <title>LUDO · 一掷之间</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='2' y='2' width='28' height='28' rx='8' fill='%23203e34'/%3E%3Ccircle cx='11' cy='11' r='3' fill='%23f8f4e8'/%3E%3Ccircle cx='21' cy='21' r='3' fill='%23f8f4e8'/%3E%3C/svg%3E">
+  <style>/*__STYLES__*/</style>
+</head>
+<body>
+  <div class="page-shell">
+    <header class="site-header">
+      <a class="brand" href="#game" data-game-link aria-label="LUDO 一掷之间，首页"><span class="brand-symbol" aria-hidden="true"><i></i><i></i><i></i><i></i></span><span class="brand-word">LUDO</span><span class="brand-caption">一掷之间</span></a>
+      <nav class="header-actions" aria-label="站点工具">
+        <span class="offline-label" data-game-only><i></i>离线也能玩</span>
+        <a class="text-button updates-link" href="#updates" data-updates-link>版本更新</a>
+        <button class="text-button" id="rules-button" data-game-only><span aria-hidden="true">?</span>玩法说明</button>
+        <button class="icon-button" id="sound-button" data-game-only aria-label="开启音效" aria-pressed="false" title="开启音效"></button>
+        <a class="back-to-game" href="#game" data-game-link data-updates-only hidden><span aria-hidden="true">←</span> 返回游戏</a>
+      </nav>
+    </header>
+
+    <main id="game-page">
+      <section class="intro" aria-label="欢迎">
+        <div><p class="eyebrow">A LITTLE LUCK. A LITTLE STRATEGY.</p><h1>下一步，由你决定<span>。</span></h1></div>
+        <p class="intro-copy">一点运气，一点巧思。<br>与电脑来一场轻松的棋盘较量。</p>
+      </section>
+
+      <div class="game-layout">
+        <section class="board-panel" aria-label="Ludo 棋盘">
+          <div class="board-heading"><span class="board-title">经典棋盘 <span>01</span></span><span class="turn-badge" id="turn-badge"><i></i>等待开局</span></div>
+          <div class="board-frame"><div class="board-stage" id="board-stage"><svg id="board-svg" viewBox="0 0 600 600" aria-hidden="true"></svg><div id="token-layer" class="token-layer"></div></div></div>
+          <div class="board-footer"><span><span class="legend-star" aria-hidden="true">☆</span>安全格，棋子不会被吃</span><span>四枚棋子到家，即获胜<span class="tiny-arrow" aria-hidden="true">↗</span></span></div>
+        </section>
+
+        <aside class="game-sidebar" aria-label="对局操作">
+          <section class="players" aria-label="双方进度">
+            <div class="player-row opponent" id="player-1"><div class="avatar ai-avatar" aria-hidden="true"><svg viewBox="0 0 28 28"><rect x="6" y="8" width="16" height="14" rx="5"/><path d="M14 4v4M3 13v5M25 13v5"/><circle cx="11" cy="14" r="1"/><circle cx="17" cy="14" r="1"/><path d="M11 18h6"/></svg></div><div class="player-label"><strong>电脑对手</strong><span id="opponent-level">中级 · 稳健出招</span></div><div class="player-progress"><div class="progress-dots" id="dots-1"></div><span><b id="finished-1">0</b> / 4 到家</span></div></div>
+            <div class="versus-line"><span>1 VS 1</span></div>
+            <div class="player-row human" id="player-0"><div class="avatar human-avatar" aria-hidden="true"><svg viewBox="0 0 28 28"><circle cx="14" cy="10" r="4"/><path d="M6 23v-2a8 8 0 0 1 16 0v2"/></svg></div><div class="player-label"><strong>你</strong><span>红色阵营</span></div><div class="player-progress"><div class="progress-dots" id="dots-0"></div><span><b id="finished-0">0</b> / 4 到家</span></div></div>
+          </section>
+
+          <section class="turn-panel" id="turn-panel" aria-label="当前行动">
+            <div class="turn-eyebrow"><span id="turn-owner">准备就绪</span><span id="roll-counter">LET’S PLAY</span><button class="mobile-restart" id="mobile-restart" aria-label="重新开始对局">↻ 重开</button></div>
+            <div class="turn-content"><div class="turn-copy"><h2 id="status-title">来掷第一颗骰子</h2><p id="status-description">选好难度，开启今天的棋局。</p></div><div class="dice" id="dice" role="img" aria-label="尚未掷骰"><div class="dice-dots" id="dice-dots"></div></div></div>
+            <button class="roll-button" id="roll-button"><span id="roll-label">开始对局</span><span class="button-arrow" aria-hidden="true">↗</span></button>
+            <div class="mobile-moves" aria-label="快捷选择棋子"><button data-move="0" disabled>棋子 1</button><button data-move="1" disabled>棋子 2</button><button data-move="2" disabled>棋子 3</button><button data-move="3" disabled>棋子 4</button></div>
+            <p class="turn-footnote" id="turn-footnote">先手随机决定，双方使用同一颗公平骰子。</p>
+          </section>
+
+          <section class="difficulty-panel" aria-label="选择对手难度">
+            <div class="section-line"><label id="difficulty-label">对手难度</label><span id="difficulty-note">从容入门，或认真较量</span></div>
+            <div class="difficulty-options" role="group" aria-labelledby="difficulty-label">
+              <button data-difficulty="beginner" class="difficulty-button" aria-pressed="false"><span class="level-bars" aria-hidden="true"><i></i></span>初级</button>
+              <button data-difficulty="medium" class="difficulty-button selected" aria-pressed="true"><span class="level-bars" aria-hidden="true"><i></i><i></i></span>中级</button>
+              <button data-difficulty="advanced" class="difficulty-button" aria-pressed="false" title="推演后续骰点和对手应对"><span class="level-bars" aria-hidden="true"><i></i><i></i><i></i></span>高级</button>
+              <button data-difficulty="ultimate" class="difficulty-button" aria-pressed="false" title="终极 v2：综合完成效率，并推演归家残局"><span class="level-bars" aria-hidden="true"><i></i><i></i><i></i><i></i></span>终极</button>
+            </div>
+          </section>
+
+          <section class="activity-panel" aria-label="对局动态"><div class="section-line"><span>棋局动态</span><span class="live-mark" aria-hidden="true">LIVE</span></div><ol class="activity-list" id="activity-list"><li class="empty-log"><span class="log-dot"></span><span>棋盘已经摆好，就等你了。</span></li></ol></section>
+          <button class="restart-button" id="restart-button" disabled><span aria-hidden="true">↻</span>重新开始</button>
+        </aside>
+      </div>
+    </main>
+    <main id="updates-page" hidden aria-labelledby="updates-title">
+      <section class="updates-intro">
+        <div><p class="eyebrow">THE LUDO JOURNAL</p><h1 id="updates-title" tabindex="-1">版本更新<span>。</span></h1><p class="updates-description">记录每一次完善，让下一局更尽兴。</p></div>
+        <div class="current-release"><span class="current-release-label"><i></i>当前版本</span><strong>v<!--__VERSION__--></strong><span>一掷之间 · 离线版</span></div>
+      </section>
+      <div class="updates-layout">
+        <aside class="updates-aside" aria-label="关于更新记录"><p class="eyebrow">SMALL STEPS, BETTER PLAY.</p><h2>每一步，<br>都更好一点。</h2><p>从第一颗骰子，到更从容的对局。这里收录已经发布的新功能与体验修复。</p><div class="journal-mark" aria-hidden="true"><i></i><i></i><i></i><i></i></div><p class="updates-pause-note">查看记录时，当前棋局会暂停。<br>返回游戏即可继续。</p></aside>
+        <section class="release-list" aria-label="版本发布历史"><!--__RELEASES__--></section>
+      </div>
+      <div class="updates-end"><span aria-hidden="true">✦</span><p>下一局，再见。</p><a href="#game" data-game-link>回到棋盘 <span aria-hidden="true">↗</span></a></div>
+    </main>
+    <footer class="site-footer"><span>一掷之间，享受每一步。</span><span>离线版 <!--__VERSION__--> <i>·</i> <a href="#updates" data-updates-link>版本更新</a></span></footer>
+    <div id="announcer" class="sr-only" role="status" aria-live="polite" aria-atomic="true"></div>
+  </div>
+
+  <dialog id="rules-dialog" class="modal rules-modal" aria-labelledby="rules-title"><div class="modal-top"><p class="eyebrow">HOW TO PLAY</p><button class="close-button" data-close="rules-dialog" aria-label="关闭玩法说明">×</button></div><h2 id="rules-title">一颗骰子，四枚棋子。</h2><p class="modal-subtitle">你执红色，电脑执黄色。先把四枚棋子送到中央终点的一方获胜。</p><div class="rule-grid"><div><span>01</span><h3>掷出 6，走出基地</h3><p>出营只到起点，也可以选择将场内棋子前进 6 格。掷出 6 后可再掷一次。</p></div><div><span>02</span><h3>落到同格，送它回营</h3><p>在普通格恰好追上对手，会将该格敌方棋子全部送回基地。经过不吃子。</p></div><div><span>03</span><h3>星标之下，安心停留</h3><p>四个起点和四个星标格都是安全格。允许叠子，叠子不封路。普通格叠子仍会被吃。</p></div><div><span>04</span><h3>点数刚好，才算到家</h3><p>进入专属通道后，需要准确点数到达终点，超出时该棋子不能移动。</p></div></div><div class="rules-notes"><p>连续第三次掷出 6，本次不移动并结束回合，前两次移动保留。</p><p>无棋可走时自动跳过本次行动；前两次掷出 6 仍可再掷。吃子和到家不额外奖励掷骰。</p><p>本版不保存未结束的对局，刷新页面会重新开始。</p></div><button class="primary-button" data-close="rules-dialog">明白了，开始玩</button></dialog>
+  <dialog id="restart-dialog" class="modal small-modal" aria-labelledby="restart-title"><p class="eyebrow">A FRESH START</p><h2 id="restart-title">重新开始一局？</h2><p>当前棋局会结束，你可以重新选择对手难度。</p><div class="modal-actions"><button class="secondary-button" data-close="restart-dialog">继续这局</button><button class="primary-button" id="confirm-restart">重新开始</button></div></dialog>
+  <dialog id="result-dialog" class="modal result-modal" aria-labelledby="result-title"><div class="result-medal" id="result-medal" aria-hidden="true">✦</div><p class="eyebrow" id="result-eyebrow">WELL PLAYED</p><h2 id="result-title">漂亮的一局！</h2><p id="result-description"></p><div class="result-stats"><div><b id="result-rolls">0</b><span>次掷骰</span></div><div><b id="result-captures">0</b><span>次吃子</span></div></div><button class="primary-button" id="play-again">再来一局 <span aria-hidden="true">↗</span></button><button class="result-review" data-close="result-dialog">看看最后的棋盘</button></dialog>
+  <noscript><p class="noscript">请在浏览器中启用 JavaScript 后开始游戏。</p></noscript>
+  <script>/*__ENGINE__*/</script>
+  <script>/*__AI__*/</script>
+  <script type="text/plain" id="ai-worker-source">/*__WORKER_SOURCE__*/</script>
+  <script>/*__AI_CLIENT__*/</script>
+  <script>/*__UPDATES__*/</script>
+  <script>/*__APP__*/</script>
+</body>
+</html>

@@ -1,0 +1,9 @@
+{
+  "searchProfile": "completion",
+  "budgetMs": 600,
+  "maxNodes": 60000,
+  "maxDepth": 64,
+  "maxCacheEntries": 20000,
+  "endgameBudgetMs": 120,
+  "maxEndgameStates": 24000
+}

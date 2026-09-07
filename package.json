@@ -1,0 +1,14 @@
+{
+  "name": "ludo-offline",
+  "version": "0.3.0",
+  "private": true,
+  "description": "离线 Ludo 单人棋局，四档本地策略",
+  "scripts": {
+    "build": "node tools/build.cjs",
+    "check": "node tools/check.cjs",
+    "test": "node --test tests/ai-client.test.cjs tests/ai-policy.test.cjs tests/ai.test.cjs tests/benchmark.test.cjs tests/engine.test.cjs tests/search.test.cjs tests/v2-combined.test.cjs tests/v2-endgame.test.cjs tests/v2-eval.test.cjs tests/v2-hybrid.test.cjs tests/v2-lab.test.cjs tests/v2-rollout.test.cjs tests/v2-search.test.cjs",
+    "benchmark": "node tools/ai-benchmark.cjs",
+    "smoke": "node tests/simulation.cjs",
+    "preview": "node tools/serve.cjs"
+  }
+}

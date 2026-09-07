@@ -1,0 +1,13 @@
+node_modules/
+.playwright-cli/
+output/
+*.pem
+*.key
+*.p12
+*.pfx
+.env
+.env.*
+!.env.example
+__pycache__/
+*.pyc
+/43.136.57.147（国内tracyyun）/

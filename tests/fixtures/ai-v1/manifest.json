@@ -1,0 +1,14 @@
+{
+  "createdAt": "2026-09-07T14:21:51.763Z",
+  "purpose": "Frozen v1 AI baseline before v2 experiments",
+  "files": {
+    "ai.js": {
+      "source": "src/ai.js",
+      "sha256": "fcea334ab40ddc1138124fc3b49692fdd1fd6e097e35af8008ac9f9839b3b2b9"
+    },
+    "engine.js": {
+      "source": "src/engine.js",
+      "sha256": "d651b61942b3cc762c4cebbd2b0b273a86dce6b764010cdd55e8105e53b00591"
+    }
+  }
+}
