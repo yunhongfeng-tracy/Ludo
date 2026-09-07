@@ -3,12 +3,17 @@ const test = require('node:test');
 const assert = require('node:assert/strict');
 const E = require('../src/engine.js');
 const AI = require('../src/ai.js');
-const Old = require('./fixtures/ai-v1/ai.js');
+// 只在沙箱中将冻结算法接到新棋规，比较算法是否保持一致，不修改旧版文件。
+const vm = require('node:vm');
+const fs = require('node:fs');
+const legacySandbox = vm.createContext({ LudoEngine: E });
+vm.runInContext(fs.readFileSync(require.resolve('./fixtures/ai-v1/ai.js'), 'utf8'), legacySandbox);
+const Old = legacySandbox.LudoAI;
 const Eval = require('../src/ai-v2-eval.js');
 const Search = require('../src/ai-v2-search.js');
 const make = (active = 0) => ({ ...E.createGame(active), tokenProgress: [[0, 12, 27, -1], [4, 18, 45, -1]], phase: 'awaitingMove', pendingDie: 6, consecutiveSixes: 1 });
 
-test('评分注入后初中高级仍与冻结旧版产生相同走法和分数', () => {
+test('相同新棋规下，评分注入后初中高级与冻结算法产生相同走法和分数', () => {
   const dice = Old.createSeededRng('legacy-regression');
   let state = E.createGame(0), positions = 0;
   for (let step = 0; step < 140 && state.phase !== 'finished'; step++) {

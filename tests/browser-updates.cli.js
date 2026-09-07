@@ -6,8 +6,8 @@ async (page) => {
   await page.context().setOffline(true);
   await page.emulateMedia({ reducedMotion: 'no-preference' });
   if (!await page.locator('#updates-page').isVisible()) throw new Error('Direct updates URL did not open updates');
-  if (await page.locator('.release-entry').count() !== 6) throw new Error('Release history is incomplete');
-  if (!await page.locator('.release-entry.latest .release-version').textContent().then(text => text.includes('0.3.0'))) throw new Error('Latest release version is stale');
+  if (await page.locator('.release-entry').count() !== 7) throw new Error('Release history is incomplete');
+  if (!await page.locator('.release-entry.latest .release-version').textContent().then(text => text.includes('0.4.0'))) throw new Error('Latest release version is stale');
   if (await page.locator('#game-page').isVisible()) throw new Error('Two pages visible at once');
   const directTitle = await page.title();
   await page.locator('.back-to-game').click();

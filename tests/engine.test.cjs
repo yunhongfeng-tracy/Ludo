@@ -124,6 +124,52 @@ test('非6在已有连续计数后走棋并换人，归零计数', () => {
   assert.equal(state.consecutiveSixes, 0);
 });
 
+test('旧棋规状态不能混入奖励再掷版', () => {
+  assert.equal(E.RULESET_ID, 'basic-ludo-1v1@2');
+  assert.throws(() => E.validateState({ ...E.createGame(), rulesetId: 'basic-ludo-1v1@1' }), /棋规版本/);
+});
+
+for (const player of [0, 1]) {
+  const setup = (own, enemy, die, streak) => player === 0
+    ? moveState(own, enemy, die, player, streak) : moveState(enemy, own, die, player, streak);
+  test(`阵营 ${player} 非6吃子重置连续计数，奖励行动可再次吃子或到家`, () => {
+    let next = E.applyAction(setup([0, 55, -1, -1], [30, 31, -1, -1], 4, 0), 0);
+    assert.equal(next.activePlayer, player);
+    next = E.applyAction(E.applyRoll(next, 1), 0);
+    assert.equal(next.activePlayer, player);
+    assert.deepEqual(next.tokenProgress[1 - player], [-1, -1, -1, -1]);
+    next = E.applyAction(E.applyRoll(next, 1), 1);
+    assert.equal(next.activePlayer, player);
+    assert.equal(next.tokenProgress[player][1], E.FINISH);
+    next = E.applyAction(E.applyRoll(next, 1), 0);
+    assert.equal(next.activePlayer, 1 - player);
+  });
+  test(`阵营 ${player} 掷6同时吃子或到家不累计奖励，第三个6仍跳过`, () => {
+    for (const [own, enemy] of [ [[4, -1, -1, -1], [36, 36, -1, -1]], [[50, 0, -1, -1], [-1, -1, -1, -1]] ]) {
+      const next = E.applyAction(setup(own, enemy, 6, 2), 0);
+      assert.equal(next.activePlayer, player);
+      assert.equal(next.consecutiveSixes, 2);
+      const skipped = E.applyRoll(next, 6);
+      assert.equal(skipped.activePlayer, 1 - player);
+      assert.deepEqual(skipped.tokenProgress, next.tokenProgress);
+      assert.equal(skipped.consecutiveSixes, 0);
+    }
+  });
+  test(`阵营 ${player} 非6到家打断连续6，奖励不因无棋可走而保留`, () => {
+    let next = setup([55, -1, -1, -1], [-1, -1, -1, -1], 1, 0);
+    next = E.applyAction(next, 0);
+    assert.equal(next.activePlayer, player);
+    next = E.applyRoll(next, 2);
+    assert.equal(next.activePlayer, 1 - player);
+    assert.equal(next.pendingDie, null);
+    assert.equal(next.consecutiveSixes, 0);
+    const reset = fixture([55, -1, -1, -1], undefined, { consecutiveSixes: 2 });
+    const home = E.applyAction(E.applyRoll(reset, 1), 0);
+    assert.equal(home.consecutiveSixes, 0);
+    assert.equal(E.applyRoll(home, 6).consecutiveSixes, 1);
+  });
+}
+
 test('6无合法动作仍再掷，累计到第三个6才换人', () => {
   let state = fixture([55, 56, 56, 56]);
   state = E.applyRoll(state, 6);
@@ -139,14 +185,18 @@ test('6无合法动作仍再掷，累计到第三个6才换人', () => {
 });
 
 for (const player of [0, 1]) {
-  test(`阵营 ${player} 普通落点吃掉全部敌方叠子，不奖励再掷`, () => {
+  test(`阵营 ${player} 普通落点吃掉全部敌方叠子，只奖励一次再掷`, () => {
     const own = [0, -1, -1, -1];
     const opponent = [30, 30, 30, -1];
     const state = player === 0 ? moveState(own, opponent, 4, player) : moveState(opponent, own, 4, player);
     const next = E.applyAction(state, 0);
     assert.equal(next.tokenProgress[player][0], 4);
     assert.deepEqual(next.tokenProgress[1 - player], [-1, -1, -1, -1]);
-    assert.equal(next.activePlayer, 1 - player);
+    assert.equal(next.activePlayer, player);
+    assert.equal(next.phase, 'awaitingRoll');
+    assert.equal(next.pendingDie, null);
+    assert.equal(next.consecutiveSixes, 0);
+    assert.equal(E.applyAction(E.applyRoll(next, 1), 0).activePlayer, 1 - player);
   });
   test(`阵营 ${player} 经过敌方叠子不吃也不被封路`, () => {
     const own = [0, -1, -1, -1];
@@ -169,7 +219,7 @@ for (const player of [0, 1]) {
     assert.equal(E.applyAction(state, 0).tokenProgress[player][0], 51);
     const finishedOne = E.applyAction(state, 1);
     assert.equal(finishedOne.tokenProgress[player][1], 56);
-    assert.equal(finishedOne.activePlayer, 1 - player);
+    assert.equal(finishedOne.activePlayer, player);
     assert.equal(finishedOne.winner, null);
     state = player === 0 ? moveState(own, undefined, 2, player) : moveState(undefined, own, 2, player);
     assert.deepEqual(E.getLegalActions(state), [0]);

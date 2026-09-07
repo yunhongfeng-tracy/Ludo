@@ -8,9 +8,14 @@ const path = require('node:path');
 const E = require('../src/engine.js');
 const B = require('../tools/ultimate-lab.cjs');
 const baseline = path.join(__dirname, 'fixtures/ai-v1/ai.js');
+const currentBaseline = path.join(__dirname, '../src/ai.js');
+
+test('评测开跑前拒绝混用旧棋规策略，不生成失败对局冒充样本', () => {
+  assert.throws(() => manifest({ opponent: { path: baseline, level: 'advanced' } }), /ruleset mismatch/);
+});
 
 function spec(overrides = {}) {
-  return { mode: 'development', execution: 'nodes', seed: 'v2-lab-unit-only', blocks: 1, maxRolls: 10000, candidate: { path: baseline, level: 'beginner', api: 'classic' }, opponent: { path: baseline, level: 'beginner', api: 'classic' }, ...overrides };
+  return { mode: 'development', execution: 'nodes', seed: 'v2-lab-unit-only', blocks: 1, maxRolls: 10000, candidate: { path: currentBaseline, level: 'beginner', api: 'classic' }, opponent: { path: currentBaseline, level: 'beginner', api: 'classic' }, ...overrides };
 }
 function manifest(overrides = {}) { return B.buildManifest(spec(overrides)); }
 const firstLegal = { chooseAction(state) { return { action: E.getLegalActions(state)[0], diagnostics: { stopReason: 'unit-policy' } }; } };
@@ -58,7 +63,7 @@ test('manifest 冻结配置、传递模块与种子，篡改或源码变化会�
   fs.writeFileSync(moduleFile, "module.exports={chooseAction:function(){return {action:0}}};\n", 'utf8');
   const m = manifest({ candidate: { path: moduleFile, api: 'direct', options: { maxRounds: 12, budgetMs: 600 } } });
   assert.equal(B.verifyManifest(m), true);
-  assert.ok(m.sources[path.join(__dirname, 'fixtures/ai-v1/engine.js')]);
+  assert.ok(m.sources[path.resolve(__dirname, '../src/engine.js')]);
   assert.equal(m.agents.candidate.options.maxRounds, 12);
   assert.throws(() => B.verifyManifest({ ...m, maxRolls: 20 }), /hash mismatch/);
   fs.appendFileSync(moduleFile, '// changed\n', 'utf8');
@@ -66,13 +71,13 @@ test('manifest 冻结配置、传递模块与种子，篡改或源码变化会�
 }));
 
 test('direct 和 classic 参数顺序正确，节点模式只移除时间保护', () => {
-  const m = manifest({ candidate: { path: baseline, api: 'direct', options: { budgetMs: 600, maxRounds: 8 } } });
+  const m = manifest({ candidate: { path: currentBaseline, api: 'direct', options: { budgetMs: 600, maxRounds: 8 } } });
   let directCalls = 0, classicCalls = 0;
   const direct = { chooseAction(state, rng, options) { assert.equal(arguments.length, 3); assert.equal(typeof rng, 'function'); assert.equal(options.budgetMs, Infinity); assert.equal(options.maxRounds, 8); directCalls += 1; return firstLegal.chooseAction(state); } };
   const classic = { chooseAction(state, level, rng, options) { assert.equal(arguments.length, 4); assert.equal(level, 'beginner'); assert.equal(typeof rng, 'function'); assert.equal(options.budgetMs, Infinity); classicCalls += 1; return firstLegal.chooseAction(state); } };
   const row = B.runGame(m, m.games[0], runtime(direct, classic));
   assert.equal(row.status, 'finished'); assert.ok(directCalls > 0 && classicCalls > 0);
-  const time = manifest({ execution: 'time', candidate: { path: baseline, api: 'direct', options: { budgetMs: 600 } } });
+  const time = manifest({ execution: 'time', candidate: { path: currentBaseline, api: 'direct', options: { budgetMs: 600 } } });
   const check = { chooseAction(state, rng, options) { assert.equal(options.budgetMs, 600); return firstLegal.chooseAction(state); } };
   assert.equal(B.runGame(time, time.games[0], runtime(check)).status, 'finished');
 });

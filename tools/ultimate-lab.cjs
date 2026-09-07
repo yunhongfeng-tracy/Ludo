@@ -77,7 +77,13 @@ function buildManifest(spec) {
   const agents = { candidate: resolveAgent(spec.candidate), opponent: resolveAgent(spec.opponent) };
   // 冻结同步 require 的传递依赖，任何变动都禁止混入同一批次。
   const files = new Set([__filename, require.resolve('../src/engine.js')]);
-  for (const agent of Object.values(agents)) moduleDependencies(agent.path, files);
+  for (const agent of Object.values(agents)) {
+    const dependencies = moduleDependencies(agent.path, new Set());
+    for (const file of dependencies) {
+      files.add(file);
+      if (path.basename(file) === 'engine.js') invariant(require(file).RULESET_ID === E.RULESET_ID, 'Agent ruleset mismatch: ' + agent.path + '. Use strategies built for ' + E.RULESET_ID + '.');
+    }
+  }
   const sources = Object.fromEntries([...files].sort().map(file => [file, sha256(fs.readFileSync(file))]));
   const manifest = { schema: VERSION, createdAt: new Date().toISOString(), mode: spec.mode, execution: spec.execution, seed: spec.seed, blocks: spec.blocks, maxRolls: spec.maxRolls, agents, sources, statistics: STATISTICS, rng: 'sha256-domain-mulberry32-rejection@1', games: makeSchedule(spec), machine: { node: process.version, platform: process.platform, cpu: os.cpus()[0]?.model, logicalCpus: os.cpus().length }, checkpoint: 'one-complete-four-game-block-per-line', pairing: 'same-chronological-dice-stream-in-all-four-games', limitation: 'Only two ultimate-candidate comparisons are covered by this alpha allocation. This is not acceptance of all four difficulty levels.' };
   return { ...manifest, id: sha256(canonical(manifest)) };

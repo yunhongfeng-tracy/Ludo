@@ -124,11 +124,12 @@
     <main id="updates-page" hidden aria-labelledby="updates-title">
       <section class="updates-intro">
         <div><p class="eyebrow">THE LUDO JOURNAL</p><h1 id="updates-title" tabindex="-1">版本更新<span>。</span></h1><p class="updates-description">记录每一次完善，让下一局更尽兴。</p></div>
-        <div class="current-release"><span class="current-release-label"><i></i>当前版本</span><strong>v0.3.0</strong><span>一掷之间 · 离线版</span></div>
+        <div class="current-release"><span class="current-release-label"><i></i>当前版本</span><strong>v0.4.0</strong><span>一掷之间 · 离线版</span></div>
       </section>
       <div class="updates-layout">
         <aside class="updates-aside" aria-label="关于更新记录"><p class="eyebrow">SMALL STEPS, BETTER PLAY.</p><h2>每一步，<br>都更好一点。</h2><p>从第一颗骰子，到更从容的对局。这里收录已经发布的新功能与体验修复。</p><div class="journal-mark" aria-hidden="true"><i></i><i></i><i></i><i></i></div><p class="updates-pause-note">查看记录时，当前棋局会暂停。<br>返回游戏即可继续。</p></aside>
-        <section class="release-list" aria-label="版本发布历史"><article class="release-entry latest" aria-labelledby="release-v0-3-0"><div class="release-meta"><span class="release-version">v0.3.0</span><time datetime="2026-09-07">2026年09月07日</time><span class="release-latest-label">最新</span></div><div class="release-content"><h2 id="release-v0-3-0">终极 AI v2</h2><p class="release-summary">重新评估完成一局的效率，进一步推演归家阶段的选择。</p><div class="release-change"><span class="change-kind improve">优化</span><ul><li>终极综合考虑出营等待、到家所需点数、被吃风险和多枚棋子的归家效率，评估后续走法。</li><li>双方未完成棋子全部进入归家通道后，终极会尝试完整求解残局，再决定走哪一枚棋子。</li><li>残局推演与常规搜索共用每步思考时间，计算到限时采用已完成的结果。</li></ul></div><p class="release-note">精确求解仅适用于上述归家残局。本轮独立验证尚未证明终极稳定强于高级，局部求解能力也不代表整局最优。</p></div></article>
+        <section class="release-list" aria-label="版本发布历史"><article class="release-entry latest" aria-labelledby="release-v0-4-0"><div class="release-meta"><span class="release-version">v0.4.0</span><time datetime="2026-09-08">2026年09月08日</time><span class="release-latest-label">最新</span></div><div class="release-content"><h2 id="release-v0-4-0">吃子与到家奖励再掷</h2><p class="release-summary">吃掉对手棋子，或将棋子送到 HOME 终点后，可以继续掷骰。</p><div class="release-change"><span class="change-kind">新增</span><ul><li>吃子或单枚棋子到达 HOME 终点，获得一次额外掷骰；双方均适用。</li><li>同一步多个奖励条件合并为一次再掷；奖励行动再次吃子或到家，可以再次获得机会。</li><li>最后一枚棋子到家立即获胜；连续第三个 6 仍跳过行动并换人。</li></ul></div><div class="release-change"><span class="change-kind improve">优化</span><ul><li>四档 AI 与终极归家残局求解同步使用新规则。</li><li>回合提示、棋局动态和玩法说明显示额外掷骰奖励。</li></ul></div><p class="release-note">进入归家通道不等于到达 HOME 终点。此前公布的对战胜率属于旧棋规，新规则下的难度胜率尚未重新验证。</p></div></article>
+<article class="release-entry" aria-labelledby="release-v0-3-0"><div class="release-meta"><span class="release-version">v0.3.0</span><time datetime="2026-09-07">2026年09月07日</time></div><div class="release-content"><h2 id="release-v0-3-0">终极 AI v2</h2><p class="release-summary">重新评估完成一局的效率，进一步推演归家阶段的选择。</p><div class="release-change"><span class="change-kind improve">优化</span><ul><li>终极综合考虑出营等待、到家所需点数、被吃风险和多枚棋子的归家效率，评估后续走法。</li><li>双方未完成棋子全部进入归家通道后，终极会尝试完整求解残局，再决定走哪一枚棋子。</li><li>残局推演与常规搜索共用每步思考时间，计算到限时采用已完成的结果。</li></ul></div><p class="release-note">精确求解仅适用于上述归家残局。本轮独立验证尚未证明终极稳定强于高级，局部求解能力也不代表整局最优。</p></div></article>
 <article class="release-entry" aria-labelledby="release-v0-2-1"><div class="release-meta"><span class="release-version">v0.2.1</span><time datetime="2026-09-07">2026年09月07日</time></div><div class="release-content"><h2 id="release-v0-2-1">版本更新记录</h2><p class="release-summary">游戏里的每一次变化，现在都可以在这里查看。</p><div class="release-change"><span class="change-kind">新增</span><ul><li>新增版本更新页面，按时间展示已发布的功能与修复。</li><li>新增游戏内入口，方便查看当前版本和历史更新。</li><li>查看记录时暂停棋局，返回游戏后继续当前对局。</li><li>更新记录随游戏一起保存，离线打开也能阅读。</li></ul></div></div></article>
 <article class="release-entry" aria-labelledby="release-v0-2-0"><div class="release-meta"><span class="release-version">v0.2.0</span><time datetime="2026-09-07">2026年09月07日</time></div><div class="release-content"><h2 id="release-v0-2-0">高级与终极 AI 登场</h2><p class="release-summary">开放另外两档难度，电脑会考虑后续骰点和双方的应对。</p><div class="release-change"><span class="change-kind">新增</span><ul><li>开放高级与终极难度，开局时可在四档 AI 中选择。</li><li>高级会推演后续走法，终极拥有更多思考额度。</li><li>两档新 AI 均在本地运行，游戏加载后断网也能继续对局。</li></ul></div><div class="release-change"><span class="change-kind improve">优化</span><ul><li>电脑思考时仍可操作界面和重新开局。</li><li>电脑思考发生异常时，会使用备用走法继续对局，并显示兼容模式。</li></ul></div><p class="release-note">该版本发布时标记为 0.2。四档难度已开放，终极是否稳定强于高级仍需更多对战验证。</p></div></article>
 <article class="release-entry" aria-labelledby="release-v0-1-dice-fix"><div class="release-meta"><span class="release-version">v0.1</span><time datetime="2026-09-07">2026年09月07日</time></div><div class="release-content"><h2 id="release-v0-1-dice-fix">骰子结果显示修复</h2><p class="release-summary">等待骰子停止摇动，再揭晓这一掷的结果。</p><div class="release-change"><span class="change-kind fix">修复</span><ul><li>修复骰子还在摇动时，点数和结果记录提前显示的问题。</li><li>点数、对局记录与可走棋子提示在摇动结束后一起更新。</li></ul></div><p class="release-note">本次体验修复沿用 0.1 版本号，当时没有单独编号。</p></div></article>
@@ -137,11 +138,11 @@
       </div>
       <div class="updates-end"><span aria-hidden="true">✦</span><p>下一局，再见。</p><a href="#game" data-game-link>回到棋盘 <span aria-hidden="true">↗</span></a></div>
     </main>
-    <footer class="site-footer"><span>一掷之间，享受每一步。</span><span>离线版 0.3.0 <i>·</i> <a href="#updates" data-updates-link>版本更新</a></span></footer>
+    <footer class="site-footer"><span>一掷之间，享受每一步。</span><span>离线版 0.4.0 <i>·</i> <a href="#updates" data-updates-link>版本更新</a></span></footer>
     <div id="announcer" class="sr-only" role="status" aria-live="polite" aria-atomic="true"></div>
   </div>
 
-  <dialog id="rules-dialog" class="modal rules-modal" aria-labelledby="rules-title"><div class="modal-top"><p class="eyebrow">HOW TO PLAY</p><button class="close-button" data-close="rules-dialog" aria-label="关闭玩法说明">×</button></div><h2 id="rules-title">一颗骰子，四枚棋子。</h2><p class="modal-subtitle">你执红色，电脑执黄色。先把四枚棋子送到中央终点的一方获胜。</p><div class="rule-grid"><div><span>01</span><h3>掷出 6，走出基地</h3><p>出营只到起点，也可以选择将场内棋子前进 6 格。掷出 6 后可再掷一次。</p></div><div><span>02</span><h3>落到同格，送它回营</h3><p>在普通格恰好追上对手，会将该格敌方棋子全部送回基地。经过不吃子。</p></div><div><span>03</span><h3>星标之下，安心停留</h3><p>四个起点和四个星标格都是安全格。允许叠子，叠子不封路。普通格叠子仍会被吃。</p></div><div><span>04</span><h3>点数刚好，才算到家</h3><p>进入专属通道后，需要准确点数到达终点，超出时该棋子不能移动。</p></div></div><div class="rules-notes"><p>连续第三次掷出 6，本次不移动并结束回合，前两次移动保留。</p><p>无棋可走时自动跳过本次行动；前两次掷出 6 仍可再掷。吃子和到家不额外奖励掷骰。</p><p>本版不保存未结束的对局，刷新页面会重新开始。</p></div><button class="primary-button" data-close="rules-dialog">明白了，开始玩</button></dialog>
+  <dialog id="rules-dialog" class="modal rules-modal" aria-labelledby="rules-title"><div class="modal-top"><p class="eyebrow">HOW TO PLAY</p><button class="close-button" data-close="rules-dialog" aria-label="关闭玩法说明">×</button></div><h2 id="rules-title">一颗骰子，四枚棋子。</h2><p class="modal-subtitle">你执红色，电脑执黄色。先把四枚棋子送到中央终点的一方获胜。</p><div class="rule-grid"><div><span>01</span><h3>掷出 6，走出基地</h3><p>出营只到起点，也可以选择将场内棋子前进 6 格。掷出 6 后可再掷一次。</p></div><div><span>02</span><h3>落到同格，送它回营</h3><p>在普通格恰好追上对手，会将该格敌方棋子全部送回基地，并获得一次额外掷骰。经过不吃子。</p></div><div><span>03</span><h3>星标之下，安心停留</h3><p>四个起点和四个星标格都是安全格。允许叠子，叠子不封路。普通格叠子仍会被吃。</p></div><div><span>04</span><h3>点数刚好，才算到家</h3><p>进入专属通道后，需要准确点数到达 HOME 终点，超点不能走。每送回一枚棋子可再掷一次，四子到家立即获胜。</p></div></div><div class="rules-notes"><p>连续第三次掷出 6，本次不移动并结束回合，前两次移动保留。</p><p>无棋可走时自动跳过本次行动；前两次掷出 6 仍可再掷。吃子或到达 HOME 终点可再掷一次；同一步的奖励与掷 6 不叠加，进入归家通道不算到家。</p><p>本版不保存未结束的对局，刷新页面会重新开始。</p></div><button class="primary-button" data-close="rules-dialog">明白了，开始玩</button></dialog>
   <dialog id="restart-dialog" class="modal small-modal" aria-labelledby="restart-title"><p class="eyebrow">A FRESH START</p><h2 id="restart-title">重新开始一局？</h2><p>当前棋局会结束，你可以重新选择对手难度。</p><div class="modal-actions"><button class="secondary-button" data-close="restart-dialog">继续这局</button><button class="primary-button" id="confirm-restart">重新开始</button></div></dialog>
   <dialog id="result-dialog" class="modal result-modal" aria-labelledby="result-title"><div class="result-medal" id="result-medal" aria-hidden="true">✦</div><p class="eyebrow" id="result-eyebrow">WELL PLAYED</p><h2 id="result-title">漂亮的一局！</h2><p id="result-description"></p><div class="result-stats"><div><b id="result-rolls">0</b><span>次掷骰</span></div><div><b id="result-captures">0</b><span>次吃子</span></div></div><button class="primary-button" id="play-again">再来一局 <span aria-hidden="true">↗</span></button><button class="result-review" data-close="result-dialog">看看最后的棋盘</button></dialog>
   <noscript><p class="noscript">请在浏览器中启用 JavaScript 后开始游戏。</p></noscript>
@@ -154,7 +155,7 @@
 })(typeof globalThis !== "undefined" ? globalThis : this, function () {
   "use strict";
 
-  var RULESET_ID = "basic-ludo-1v1@1";
+  var RULESET_ID = "basic-ludo-1v1@2";
   var BOARD_VERSION = 1;
   var FINISH = 56;
   var START_OFFSETS = Object.freeze([0, 26]);
@@ -304,11 +305,11 @@
   }
 
   // 操作尚未对外返回的新副本，结算后清空待用骰点。
-  function consumeDie(next, die) {
+  function consumeDie(next, die, bonus) {
     next.phase = "awaitingRoll";
     next.pendingDie = null;
     if (die !== 6) {
-      next.activePlayer = 1 - next.activePlayer;
+      if (!bonus) next.activePlayer = 1 - next.activePlayer;
       next.consecutiveSixes = 0;
     }
     return next;
@@ -341,6 +342,7 @@
     var oldProgress = next.tokenProgress[player][tokenId];
     var newProgress = oldProgress === -1 ? 0 : oldProgress + die;
     next.tokenProgress[player][tokenId] = newProgress;
+    var captured = false;
 
     if (newProgress <= 50) {
       var targetIndex = (START_OFFSETS[player] + newProgress) % RING.length;
@@ -351,6 +353,7 @@
           if (enemyProgress >= 0 && enemyProgress <= 50 &&
               (START_OFFSETS[opponent] + enemyProgress) % RING.length === targetIndex) {
             next.tokenProgress[opponent][enemyId] = -1;
+            captured = true;
           }
         }
       }
@@ -363,7 +366,8 @@
       next.winner = player;
       return next;
     }
-    return consumeDie(next, die);
+    // 同一步的掷 6、吃子、到达终点合并为一次再掷，不累计待用奖励。
+    return consumeDie(next, die, captured || newProgress === FINISH);
   }
 
   function getTerminalResult(state) {
@@ -1618,7 +1622,7 @@
 })(typeof globalThis !== "undefined" ? globalThis : this, function () {
   "use strict";
 
-  var RULESET_ID = "basic-ludo-1v1@1";
+  var RULESET_ID = "basic-ludo-1v1@2";
   var BOARD_VERSION = 1;
   var FINISH = 56;
   var START_OFFSETS = Object.freeze([0, 26]);
@@ -1768,11 +1772,11 @@
   }
 
   // 操作尚未对外返回的新副本，结算后清空待用骰点。
-  function consumeDie(next, die) {
+  function consumeDie(next, die, bonus) {
     next.phase = "awaitingRoll";
     next.pendingDie = null;
     if (die !== 6) {
-      next.activePlayer = 1 - next.activePlayer;
+      if (!bonus) next.activePlayer = 1 - next.activePlayer;
       next.consecutiveSixes = 0;
     }
     return next;
@@ -1805,6 +1809,7 @@
     var oldProgress = next.tokenProgress[player][tokenId];
     var newProgress = oldProgress === -1 ? 0 : oldProgress + die;
     next.tokenProgress[player][tokenId] = newProgress;
+    var captured = false;
 
     if (newProgress <= 50) {
       var targetIndex = (START_OFFSETS[player] + newProgress) % RING.length;
@@ -1815,6 +1820,7 @@
           if (enemyProgress >= 0 && enemyProgress <= 50 &&
               (START_OFFSETS[opponent] + enemyProgress) % RING.length === targetIndex) {
             next.tokenProgress[opponent][enemyId] = -1;
+            captured = true;
           }
         }
       }
@@ -1827,7 +1833,8 @@
       next.winner = player;
       return next;
     }
-    return consumeDie(next, die);
+    // 同一步的掷 6、吃子、到达终点合并为一次再掷，不累计待用奖励。
+    return consumeDie(next, die, captured || newProgress === FINISH);
   }
 
   function getTerminalResult(state) {
@@ -3309,6 +3316,7 @@ self.onmessage = function (event) {
   let compatibilityMode = false;
   let viewingUpdates = window.location.hash === "#updates";
   let resultAnnounced = false;
+  let bonusReason = null;
 
   function cancelAI() {
     aiEpoch++;
@@ -3551,11 +3559,12 @@ self.onmessage = function (event) {
       label = "再来一局"; owner = "对局结束"; badge = state.winner === 0 ? "你获胜了" : "电脑获胜"; footnote = "每一局，都是一次新的开始。"; enabled = true;
     } else if (state.activePlayer === 1) {
       title = "对手正在思考"; description = "看看它会选择哪一步。"; label = "等待电脑行动"; owner = "电脑的回合"; badge = "电脑回合"; footnote = "你执红色，电脑执黄色。";
+      if (state.phase === "awaitingRoll" && bonusReason) { title = "对手可以再掷一次"; description = `${bonusReason}，电脑获得一次再掷机会。`; }
     } else if (state.phase === "awaitingMove") {
       title = "选一枚棋子出发"; description = `掷出了 ${state.pendingDie} 点，点击带箭头和外圈的红色棋子。`; label = "点击带箭头的红色棋子"; owner = "你的回合"; badge = "请选择棋子"; footnote = "也可以用 Tab 选择棋子，按 Enter 移动。";
     } else {
-      const again = state.consecutiveSixes > 0;
-      title = again ? "好手气，再掷一次" : "轮到你了"; description = again ? "掷出 6 获得一次再掷机会。" : "点击下方按钮，掷出你的下一步。"; label = "掷骰子"; owner = "你的回合"; badge = "你的回合"; footnote = again ? "连续第三次掷出 6，会结束本回合。" : "掷出 6，可以让一枚棋子离开基地。"; enabled = true;
+      const again = Boolean(bonusReason) || state.consecutiveSixes > 0;
+      title = again ? "再掷一次，继续出发" : "轮到你了"; description = again ? `${bonusReason || "掷出 6"}，获得一次再掷机会。` : "点击下方按钮，掷出你的下一步。"; label = "掷骰子"; owner = "你的回合"; badge = "你的回合"; footnote = again ? "同一步奖励不叠加；连续第三个 6 结束回合。" : "掷出 6，可以让一枚棋子离开基地。"; enabled = true;
     }
     $("status-title").textContent = title;
     $("status-description").textContent = description;
@@ -3583,7 +3592,7 @@ self.onmessage = function (event) {
     generation++; revision++; clearScheduled();
     state = E.createGame(0); started = false; busy = false; lastDie = null; motion = null;
     fatalError = null; activity = "idle"; rollCount = 0; captureCount = 0; lastDecision = null;
-    pendingCompletion = null; rollingPlayer = null; resultAnnounced = false;
+    pendingCompletion = null; rollingPlayer = null; resultAnnounced = false; bonusReason = null;
     logEntries.length = 0;
     document.querySelectorAll("dialog[open]").forEach(dialog => dialog.close());
     log("新棋盘准备好了，选择难度后开始。", null);
@@ -3598,7 +3607,7 @@ self.onmessage = function (event) {
       generation++; revision++;
       state = E.createGame(secureInt(2));
       decisionRng = AI.createSeededRng(secureInt(0x100000000));
-      started = true; rollCount = 0; captureCount = 0; fatalError = null; lastDie = null; resultAnnounced = false;
+      started = true; rollCount = 0; captureCount = 0; fatalError = null; lastDie = null; resultAnnounced = false; bonusReason = null;
       log(`棋局开始，${names[state.activePlayer]}先手。`, state.activePlayer);
       render(); scheduleAI();
     } catch (error) { fail(error); }
@@ -3671,13 +3680,14 @@ self.onmessage = function (event) {
     const player = state.activePlayer;
     const previousSixes = state.consecutiveSixes;
     try {
-      busy = true; activity = "rolling"; rollingPlayer = player;
+      busy = true; activity = "rolling"; rollingPlayer = player; bonusReason = null;
       const die = secureInt(6) + 1;
       rollCount++;
       state = E.applyRoll(state, die); revision++;
       pendingCompletion = () => {
         lastDie = die;
         busy = false; activity = "idle"; rollingPlayer = null;
+        bonusReason = state.phase === "awaitingRoll" && state.activePlayer === player && die === 6 ? "掷出 6" : null;
         if (die === 6 && previousSixes === 2) log(`${names[player]}连续第三次掷出 6，本次跳过。`, player);
         else if (state.phase === "awaitingRoll") log(`${names[player]}掷出 ${die}，没有可移动的棋子${die === 6 ? "，可以再掷" : ""}。`, player);
         else log(`${names[player]}掷出 ${die} 点。`, player);
@@ -3710,6 +3720,9 @@ self.onmessage = function (event) {
         let message = from === -1 ? `${names[player]}的 ${token + 1} 号棋子出营。` : `${names[player]}的 ${token + 1} 号棋子前进 ${before.pendingDie} 格。`;
         if (captured) { message = `${names[player]}吃掉了 ${captured} 枚对方棋子。`; captureCount++; tone("capture"); }
         else if (to === E.FINISH) { message = `${names[player]}的 ${token + 1} 号棋子到家了！`; tone("finish"); }
+        bonusReason = state.phase !== "finished" && state.activePlayer === player
+          ? (captured ? "吃掉对方棋子" : to === E.FINISH ? "棋子到达 HOME 终点" : "掷出 6") : null;
+        if (bonusReason && (captured || to === E.FINISH)) message += " 获得一次额外掷骰机会。";
         log(message, player); render();
         if (state.phase === "finished") showResult();
         else scheduleAI();

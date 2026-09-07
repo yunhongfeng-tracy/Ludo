@@ -7,7 +7,7 @@
 })(typeof globalThis !== "undefined" ? globalThis : this, function () {
   "use strict";
 
-  var RULESET_ID = "basic-ludo-1v1@1";
+  var RULESET_ID = "basic-ludo-1v1@2";
   var BOARD_VERSION = 1;
   var FINISH = 56;
   var START_OFFSETS = Object.freeze([0, 26]);
@@ -157,11 +157,11 @@
   }
 
   // 操作尚未对外返回的新副本，结算后清空待用骰点。
-  function consumeDie(next, die) {
+  function consumeDie(next, die, bonus) {
     next.phase = "awaitingRoll";
     next.pendingDie = null;
     if (die !== 6) {
-      next.activePlayer = 1 - next.activePlayer;
+      if (!bonus) next.activePlayer = 1 - next.activePlayer;
       next.consecutiveSixes = 0;
     }
     return next;
@@ -194,6 +194,7 @@
     var oldProgress = next.tokenProgress[player][tokenId];
     var newProgress = oldProgress === -1 ? 0 : oldProgress + die;
     next.tokenProgress[player][tokenId] = newProgress;
+    var captured = false;
 
     if (newProgress <= 50) {
       var targetIndex = (START_OFFSETS[player] + newProgress) % RING.length;
@@ -204,6 +205,7 @@
           if (enemyProgress >= 0 && enemyProgress <= 50 &&
               (START_OFFSETS[opponent] + enemyProgress) % RING.length === targetIndex) {
             next.tokenProgress[opponent][enemyId] = -1;
+            captured = true;
           }
         }
       }
@@ -216,7 +218,8 @@
       next.winner = player;
       return next;
     }
-    return consumeDie(next, die);
+    // 同一步的掷 6、吃子、到达终点合并为一次再掷，不累计待用奖励。
+    return consumeDie(next, die, captured || newProgress === FINISH);
   }
 
   function getTerminalResult(state) {

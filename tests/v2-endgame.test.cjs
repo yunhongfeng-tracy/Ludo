@@ -79,6 +79,15 @@ test('已结束状态为真实 0/1 概率，当前直接到家走法为 1', () =
   assert.equal(S.solveState(terminal, 1, UNLIMITED_TIME).probability, 0);
 });
 
+test('非最后一子到家后的再掷奖励计入精确概率，而非交给对手', () => {
+  const waiting = E.applyRoll(state([55, 55], [55]), 1);
+  const result = S.analyze(waiting, UNLIMITED_TIME);
+  assert.equal(result.complete, true);
+  // 先送回一子后仍由自己掷骰，剩余双方各差一格，等于已独立推导的先手概率。
+  close(result.probability, 216 / 389);
+  assert.equal(E.applyAction(waiting, result.action).activePlayer, 0);
+});
+
 test('独立全图值迭代核对不对称残局、连续 6 与多子选择', () => {
   const cases = [state([54], [55]), state([53], [54], 1, 2), state([54, 55], [54, 55]), state([53, 55], [54, 55], 1, 1)];
   for (const before of cases) {

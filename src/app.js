@@ -40,6 +40,7 @@
   let compatibilityMode = false;
   let viewingUpdates = window.location.hash === "#updates";
   let resultAnnounced = false;
+  let bonusReason = null;
 
   function cancelAI() {
     aiEpoch++;
@@ -282,11 +283,12 @@
       label = "再来一局"; owner = "对局结束"; badge = state.winner === 0 ? "你获胜了" : "电脑获胜"; footnote = "每一局，都是一次新的开始。"; enabled = true;
     } else if (state.activePlayer === 1) {
       title = "对手正在思考"; description = "看看它会选择哪一步。"; label = "等待电脑行动"; owner = "电脑的回合"; badge = "电脑回合"; footnote = "你执红色，电脑执黄色。";
+      if (state.phase === "awaitingRoll" && bonusReason) { title = "对手可以再掷一次"; description = `${bonusReason}，电脑获得一次再掷机会。`; }
     } else if (state.phase === "awaitingMove") {
       title = "选一枚棋子出发"; description = `掷出了 ${state.pendingDie} 点，点击带箭头和外圈的红色棋子。`; label = "点击带箭头的红色棋子"; owner = "你的回合"; badge = "请选择棋子"; footnote = "也可以用 Tab 选择棋子，按 Enter 移动。";
     } else {
-      const again = state.consecutiveSixes > 0;
-      title = again ? "好手气，再掷一次" : "轮到你了"; description = again ? "掷出 6 获得一次再掷机会。" : "点击下方按钮，掷出你的下一步。"; label = "掷骰子"; owner = "你的回合"; badge = "你的回合"; footnote = again ? "连续第三次掷出 6，会结束本回合。" : "掷出 6，可以让一枚棋子离开基地。"; enabled = true;
+      const again = Boolean(bonusReason) || state.consecutiveSixes > 0;
+      title = again ? "再掷一次，继续出发" : "轮到你了"; description = again ? `${bonusReason || "掷出 6"}，获得一次再掷机会。` : "点击下方按钮，掷出你的下一步。"; label = "掷骰子"; owner = "你的回合"; badge = "你的回合"; footnote = again ? "同一步奖励不叠加；连续第三个 6 结束回合。" : "掷出 6，可以让一枚棋子离开基地。"; enabled = true;
     }
     $("status-title").textContent = title;
     $("status-description").textContent = description;
@@ -314,7 +316,7 @@
     generation++; revision++; clearScheduled();
     state = E.createGame(0); started = false; busy = false; lastDie = null; motion = null;
     fatalError = null; activity = "idle"; rollCount = 0; captureCount = 0; lastDecision = null;
-    pendingCompletion = null; rollingPlayer = null; resultAnnounced = false;
+    pendingCompletion = null; rollingPlayer = null; resultAnnounced = false; bonusReason = null;
     logEntries.length = 0;
     document.querySelectorAll("dialog[open]").forEach(dialog => dialog.close());
     log("新棋盘准备好了，选择难度后开始。", null);
@@ -329,7 +331,7 @@
       generation++; revision++;
       state = E.createGame(secureInt(2));
       decisionRng = AI.createSeededRng(secureInt(0x100000000));
-      started = true; rollCount = 0; captureCount = 0; fatalError = null; lastDie = null; resultAnnounced = false;
+      started = true; rollCount = 0; captureCount = 0; fatalError = null; lastDie = null; resultAnnounced = false; bonusReason = null;
       log(`棋局开始，${names[state.activePlayer]}先手。`, state.activePlayer);
       render(); scheduleAI();
     } catch (error) { fail(error); }
@@ -402,13 +404,14 @@
     const player = state.activePlayer;
     const previousSixes = state.consecutiveSixes;
     try {
-      busy = true; activity = "rolling"; rollingPlayer = player;
+      busy = true; activity = "rolling"; rollingPlayer = player; bonusReason = null;
       const die = secureInt(6) + 1;
       rollCount++;
       state = E.applyRoll(state, die); revision++;
       pendingCompletion = () => {
         lastDie = die;
         busy = false; activity = "idle"; rollingPlayer = null;
+        bonusReason = state.phase === "awaitingRoll" && state.activePlayer === player && die === 6 ? "掷出 6" : null;
         if (die === 6 && previousSixes === 2) log(`${names[player]}连续第三次掷出 6，本次跳过。`, player);
         else if (state.phase === "awaitingRoll") log(`${names[player]}掷出 ${die}，没有可移动的棋子${die === 6 ? "，可以再掷" : ""}。`, player);
         else log(`${names[player]}掷出 ${die} 点。`, player);
@@ -441,6 +444,9 @@
         let message = from === -1 ? `${names[player]}的 ${token + 1} 号棋子出营。` : `${names[player]}的 ${token + 1} 号棋子前进 ${before.pendingDie} 格。`;
         if (captured) { message = `${names[player]}吃掉了 ${captured} 枚对方棋子。`; captureCount++; tone("capture"); }
         else if (to === E.FINISH) { message = `${names[player]}的 ${token + 1} 号棋子到家了！`; tone("finish"); }
+        bonusReason = state.phase !== "finished" && state.activePlayer === player
+          ? (captured ? "吃掉对方棋子" : to === E.FINISH ? "棋子到达 HOME 终点" : "掷出 6") : null;
+        if (bonusReason && (captured || to === E.FINISH)) message += " 获得一次额外掷骰机会。";
         log(message, player); render();
         if (state.phase === "finished") showResult();
         else scheduleAI();
