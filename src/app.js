@@ -10,10 +10,10 @@
   const levelDescriptions = { beginner: "轻松练习", medium: "稳健出招", advanced: "推演应对", ultimate: "深思熟虑" };
   const aiClient = window.LudoAIClient.create($("ai-worker-source").textContent);
   const colors = ["#d66250", "#e6b647"];
-  // 与 SVG 基地中的 88/168 中心对齐；渲染时统一加半格得到格心。
+  // 与 SVG 基地中的 80/160 中心对齐；渲染时统一加半格得到格心。
   const yardCells = [
-    [{ row: 10.7, col: 1.7 }, { row: 10.7, col: 3.7 }, { row: 12.7, col: 1.7 }, { row: 12.7, col: 3.7 }],
-    [{ row: 1.7, col: 10.7 }, { row: 1.7, col: 12.7 }, { row: 3.7, col: 10.7 }, { row: 3.7, col: 12.7 }]
+    [{ row: 10.5, col: 1.5 }, { row: 10.5, col: 3.5 }, { row: 12.5, col: 1.5 }, { row: 12.5, col: 3.5 }],
+    [{ row: 1.5, col: 10.5 }, { row: 1.5, col: 12.5 }, { row: 3.5, col: 10.5 }, { row: 3.5, col: 12.5 }]
   ];
   const tokenButtons = [[], []];
   const logEntries = [];
@@ -117,7 +117,7 @@
 
   function createBoard() {
     let svg = '<defs><filter id="paper-grain" x="-10%" y="-10%" width="120%" height="120%"><feTurbulence type="fractalNoise" baseFrequency=".62" numOctaves="3" seed="17" result="noise"/><feColorMatrix in="noise" type="saturate" values="0" result="mono"/><feComponentTransfer in="mono"><feFuncA type="table" tableValues="0 .12"/></feComponentTransfer></filter><linearGradient id="aged-paper" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f3e4bf"/><stop offset=".48" stop-color="#e8d4a9"/><stop offset="1" stop-color="#d5bd8d"/></linearGradient></defs>';
-    svg += '<rect x="3" y="3" width="594" height="594" fill="#c39a61" stroke="#251b14" stroke-width="6"/><rect x="11" y="11" width="578" height="578" fill="url(#aged-paper)" stroke="#5e3d27" stroke-width="3"/><rect x="16" y="16" width="568" height="568" fill="#ead9b4" stroke="#241b15" stroke-width="2"/>';
+    svg += '<rect width="600" height="600" fill="url(#aged-paper)"/>';
     const quadrants = [
       { x: 0, y: 0, fill: "#75975c", dark: "#314a31", inactive: true },
       { x: 360, y: 0, fill: "#d5ae3e", dark: "#6f5721", inactive: false },
@@ -125,9 +125,9 @@
       { x: 360, y: 360, fill: "#4e8da3", dark: "#254d5b", inactive: true }
     ];
     quadrants.forEach(q => {
-      svg += `<rect x="${q.x + 16}" y="${q.y + 16}" width="224" height="224" fill="${q.fill}" stroke="#2d2920" stroke-width="2"/>`;
-      svg += `<rect x="${q.x + 53}" y="${q.y + 53}" width="150" height="150" fill="#eadcb9" stroke="#2d2920" stroke-width="4"/>`;
-      [88, 168].forEach(x => [88, 168].forEach(y => {
+      svg += `<rect x="${q.x}" y="${q.y}" width="240" height="240" fill="${q.fill}" stroke="#2d2920" stroke-width="2"/>`;
+      svg += `<rect x="${q.x + 45}" y="${q.y + 45}" width="150" height="150" fill="#eadcb9" stroke="#2d2920" stroke-width="4"/>`;
+      [80, 160].forEach(x => [80, 160].forEach(y => {
         svg += `<rect x="${q.x + x - 20}" y="${q.y + y - 20}" width="40" height="40" fill="${q.inactive ? q.fill : '#eadcb9'}" fill-opacity="${q.inactive ? '.92' : '.36'}" stroke="${q.dark}" stroke-width="2"/>`;
       }));
     });
@@ -153,7 +153,7 @@
     svg += '<path d="M240 240 300 300 240 360Z" fill="#75975c"/><path d="M240 240 360 240 300 300Z" fill="#d5ae3e"/><path d="M360 240 360 360 300 300Z" fill="#4e8da3"/><path d="M240 360 300 300 360 360Z" fill="#c84d37"/>';
     svg += '<path d="M240 240h120v120H240Z" fill="none" stroke="#2b2b26" stroke-width="3"/><path d="M240 240 360 360M360 240 240 360" stroke="#333029" stroke-width="1.5"/>';
     svg += '<text x="300" y="306" text-anchor="middle" fill="#2f2a22" font-size="15" font-weight="700" font-family="Georgia,serif" letter-spacing="1">HOME</text>';
-    svg += '<rect x="16" y="16" width="568" height="568" fill="#5b3f27" opacity=".16" filter="url(#paper-grain)" pointer-events="none"/><path d="M300 13v574" stroke="#67442b" stroke-opacity=".34" stroke-width="2"/><path d="M303 13v574" stroke="#f4e5c2" stroke-opacity=".22"/>';
+    svg += '<rect width="600" height="600" fill="#5b3f27" opacity=".16" filter="url(#paper-grain)" pointer-events="none"/><path d="M300 0v600" stroke="#67442b" stroke-opacity=".34" stroke-width="2"/><path d="M303 0v600" stroke="#f4e5c2" stroke-opacity=".22"/><rect x="1.5" y="1.5" width="597" height="597" fill="none" stroke="#292019" stroke-width="3"/>';
     $("board-svg").innerHTML = svg;
     for (let player = 0; player < 2; player++) {
       for (let token = 0; token < 4; token++) {
