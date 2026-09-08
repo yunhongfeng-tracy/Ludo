@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#f4f1e8">
+  <meta name="theme-color" content="#3b1f14">
   <meta name="description" content="一场轻松的 Ludo 棋局。与电脑对战，离线也能玩。">
   <title>LUDO · 一掷之间</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='2' y='2' width='28' height='28' rx='8' fill='%23203e34'/%3E%3Ccircle cx='11' cy='11' r='3' fill='%23f8f4e8'/%3E%3Ccircle cx='21' cy='21' r='3' fill='%23f8f4e8'/%3E%3C/svg%3E">
@@ -63,6 +63,21 @@
   .mobile-moves button{height:34px;background:#f3d98f;border:1px solid #e9cd81;border-radius:7px;color:#4b4829;font-size:11px;font-weight:600}
   .mobile-moves button:disabled{background:#35573f;border-color:#53714e;color:#9cae91;font-weight:400}
 }
+
+/* v0.5.0 复古桌游主题：旧纸棋盘、木桌背景与做旧木棋子。 */
+:root{--paper:#e7d4ab;--paper-light:#f0dfba;--ink:#30261e;--muted:#776857;--line:#9f815f;--green:#234d38;--red:#bd3f30;--yellow:#d5aa36;--blue:#4f8ba0;--sage:#78955f;--white:#f6e8c7;--radius:5px}
+body{background-color:#3a2016;background-image:radial-gradient(ellipse at 18% -15%,#8b553333,transparent 42%),radial-gradient(ellipse at 82% 120%,#14090788,transparent 55%),repeating-linear-gradient(4deg,#ffffff08 0 1px,transparent 1px 7px),repeating-linear-gradient(92deg,#160b082b 0 2px,transparent 2px 48px),linear-gradient(104deg,#4a281b,#2b1711 48%,#4a281b);color:var(--ink);min-height:100vh}
+.site-header{height:76px;border-bottom:1px solid #c7a77b66;color:#f0dfbd;text-shadow:0 2px 2px #160b08}.brand-symbol{filter:drop-shadow(0 2px 1px #140906)}.brand-symbol i{border:1px solid #edd8a766}.brand-word{font-size:34px;color:#f3e3c5;letter-spacing:2px}.brand-caption{border-color:#d8bc8a99;color:#e6cda7}.offline-label{color:#d7c09d}.offline-label i{background:#86a765;box-shadow:0 0 0 2px #2a1a12}.text-button,.back-to-game{color:#ead5b1}.text-button>span,.icon-button{border-color:#dec49b}.text-button:hover,.updates-link:hover{color:#fff0ce}.icon-button{background:#2a160d77;color:#f0dfbd}.icon-button[aria-pressed="true"]{background:#6b472e;color:#fff0d0}.updates-link:hover,.updates-link[aria-current="page"]{border-bottom-color:#e0bc7c}
+#game-page{padding-top:14px}.game-layout{align-items:start}.board-heading{height:34px;padding:0 4px 9px;color:#ead9b8}.board-title{font-family:var(--serif);letter-spacing:1.5px}.board-title>span{color:#bba17b}.turn-badge{border-radius:2px;background:#3f291c;border-color:#8b6747;color:#d8c09b}.turn-badge.your-turn{background:#6f2f25;border-color:#c47961;color:#ffe1bc}.turn-badge i{background:#91a66f}.turn-badge.your-turn i{background:#f1b077}
+.board-frame{padding:15px;border:3px solid #2d1b12;border-radius:4px;background:repeating-linear-gradient(90deg,#7e4b2d 0 3px,#ac7043 3px 6px,#3f2518 6px 8px);box-shadow:0 18px 34px #14090699,0 0 0 2px #b68651,0 0 0 5px #2a180f,0 2px 1px #e5be7a inset}.board-stage{border-radius:0;background:#e5d1a7;box-shadow:0 0 0 2px #231913,0 3px 15px #1a0d08 inset;overflow:hidden}.board-stage>svg{border-radius:0}.board-footer{padding:12px 4px 0;color:#d8c09d;text-shadow:0 1px 1px #120805}.legend-star{color:#dfbd7c}
+.game-sidebar{position:relative;padding:20px 22px 19px;gap:13px;background-color:#ead7af;background-image:radial-gradient(circle at 12% 14%,#75482616 0 1px,transparent 2px),radial-gradient(circle at 86% 75%,#75482612 0 1px,transparent 2px),repeating-linear-gradient(8deg,#5c3e1f08 0 1px,transparent 1px 6px),linear-gradient(125deg,#f1dfbb,#dfc69a);border:2px solid #3e291d;border-radius:5px;box-shadow:0 17px 34px #160a0599,0 0 0 3px #a87849,0 0 0 5px #2f1d14,0 1px #fff0ca inset;animation:arrive .6s .13s ease both;color:#362820}.game-sidebar::after{content:"";position:absolute;inset:8px;border:1px solid #6c4b3099;pointer-events:none}.game-sidebar>*{position:relative;z-index:1}.scorecard-title{display:flex;align-items:center;gap:14px;margin:0 0 1px;font-family:var(--serif);font-size:27px;line-height:1.25;letter-spacing:3px;text-align:center}.scorecard-title span{height:1px;background:#68462f;flex:1}.players{padding:4px 0 10px;border:0;border-bottom:3px double #60432e;border-radius:0;background:transparent}.player-row{min-height:49px}.avatar{width:34px;height:34px;border-radius:50%;border:2px solid #59402b;box-shadow:0 3px 0 #684029,0 5px 7px #2d190d55}.avatar svg{width:21px;height:21px}.ai-avatar{background:#d9ad38;color:#5e441d}.human-avatar{background:#c74736;color:#f6d8b8}.player-label strong{font-family:var(--serif);font-size:13px;letter-spacing:.8px}.player-label>span,.player-progress>span{color:#76604a}.progress-dots i{width:9px;height:9px;border:1px solid #826b50;background:transparent}.opponent .progress-dots i.done{background:#d4a62f}.human .progress-dots i.done{background:#bc3d2f}.versus-line{height:11px}.versus-line::before,.versus-line::after{background:#9f8463}.versus-line span{color:#79634c}
+.turn-panel{min-height:204px;padding:14px 0 12px;border-radius:0;border-bottom:3px double #60432e;background:transparent;color:#34271f;box-shadow:none}.turn-eyebrow{color:#71583f}.turn-eyebrow>span:last-child{color:#887153}.turn-content{height:91px}.turn-copy h2{font-size:20px;color:#30231c}.turn-copy p{color:#715e48}.dice{position:relative;isolation:isolate;width:58px;height:58px;border-radius:8px;background:linear-gradient(145deg,#fff5d7,#d7c49e);color:#273f31;box-shadow:0 4px 0 #a28d68,0 8px 12px #24150d66;transform:rotate(4deg)}.dice::before{content:"";position:absolute;inset:-15px;z-index:-1;border:5px solid #482d1e;border-radius:9px;background:radial-gradient(circle at 50% 45%,#28583f,#102c20);box-shadow:0 3px 0 #2a180f,0 6px 10px #1b0e0888,inset 0 0 8px #06150f}.dice-dots i{background:#263c30}.dice.rolling::after{color:#253d30}.roll-button{height:47px;border:2px solid #63251e;border-radius:3px;background:linear-gradient(#cc4434,#a82f26);color:#f8e5bd;box-shadow:0 3px 0 #6d241d,0 5px 8px #2f180e55,inset 0 1px #f49b77;font-family:var(--serif);font-size:16px}.roll-button:hover:not(:disabled){background:linear-gradient(#db523f,#b9362a);box-shadow:0 3px 0 #6d241d,0 6px 12px #2f180e66,inset 0 1px #ffad87}.roll-button:disabled{background:#92775b;border-color:#65513f;color:#e1cfaa}.turn-footnote{color:#755f47}
+.section-line{font-family:var(--serif);font-size:13px}.section-line>span:last-child:not(:first-child){color:#7c664e}.difficulty-panel{padding-top:1px;border-bottom:3px double #60432e;padding-bottom:13px}.difficulty-options{gap:6px}.difficulty-button{height:56px;border:1px solid #8d7052;border-radius:3px;background:#ecdbb8;color:#6f5a43;box-shadow:0 1px #fff0ca inset;font-family:var(--serif);font-size:11px}.difficulty-button.selected{border-color:#463321;background:#d7aa3c;color:#382918;box-shadow:inset 0 0 0 2px #f0cd70,0 2px 0 #765721}.difficulty-button:hover:not(:disabled){background:#f3e3c0}.level-bars i{border-radius:0}.activity-panel{padding-top:0}.live-mark{color:#846b4f!important}.activity-list{height:66px;min-height:66px;scrollbar-color:#957757 transparent}.activity-list li{color:#77614a}.activity-list li:first-child:not(.empty-log){color:#3e593b}.log-dot{background:#78955f}.restart-button{border:0;border-radius:0;border-top:1px solid #9b7a58;background:transparent;color:#725c47;margin-top:0}.restart-button:hover:not(:disabled){background:#d8c19a}
+.token{width:5.1%;height:5.1%;border:2px solid #64261d;background:radial-gradient(circle at 32% 22%,#ffe2b477 0 5%,transparent 19%),repeating-linear-gradient(92deg,#4a160f28 0 1px,transparent 1px 5px),radial-gradient(circle at 42% 38%,#cf5945,#a52f25 76%);box-shadow:0 4px 0 #6a251b,0 7px 1px #32130dcc,0 10px 12px #1d0c0788,inset 0 2px 2px #ffd7aa99,inset 0 -3px 4px #5d160f88;color:#f8dfba;font-family:Georgia,var(--serif);font-size:clamp(9px,1.05vw,14px);text-shadow:0 1px #42110c}.token.yellow{border-color:#6f4e19;background:radial-gradient(circle at 32% 22%,#fff3c899 0 5%,transparent 19%),repeating-linear-gradient(88deg,#5d40182b 0 1px,transparent 1px 5px),radial-gradient(circle at 42% 38%,#e0b643,#b98124 76%);box-shadow:0 4px 0 #80591d,0 7px 1px #3a260dcc,0 10px 12px #1d0c0788,inset 0 2px 2px #fff2bd,inset 0 -3px 4px #6e481588;color:#523814;text-shadow:0 1px #efd07b}.token.in-yard{width:7.1%;height:7.1%;border-width:3px;box-shadow:0 6px 0 #6a251b,0 9px 1px #32130dcc,0 13px 15px #1d0c0799,inset 0 2px 2px #ffd7aa99,inset 0 -4px 5px #5d160f99;font-size:clamp(11px,1.3vw,17px)}.token.yellow.in-yard{box-shadow:0 6px 0 #80591d,0 9px 1px #3a260dcc,0 13px 15px #1d0c0799,inset 0 2px 2px #fff2bd,inset 0 -4px 5px #6e481599}.token.stacked{width:3.5%;height:3.5%;box-shadow:0 3px 0 #6a251b,0 5px 5px #24100888}.token.yellow.stacked{box-shadow:0 3px 0 #80591d,0 5px 5px #24100888}.token.legal::before{border-color:#173f31;box-shadow:0 0 0 2px #f5dfb3;background:#e6bd6d22}.token.legal::after{border-top-color:#173f31}.token.legal:focus-visible{outline-color:#173f31}
+.site-footer{color:#d0b590}.site-footer i{color:#987656}.site-footer a:hover{color:#fff0cf}
+#updates-page{margin-top:20px;padding:0 38px 32px;background-color:#ead7af;background-image:repeating-linear-gradient(8deg,#5c3e1f08 0 1px,transparent 1px 6px),linear-gradient(125deg,#f1dfbb,#dfc69a);border:2px solid #3e291d;box-shadow:0 17px 34px #160a0599,0 0 0 3px #a87849}.updates-intro{border-bottom-color:#9f815f}.updates-description,.updates-aside>p,.updates-pause-note{color:#715e48}.release-content{background:#f0dfba99;border-color:#b99a73}.release-entry::before{background:#e7d4ab}.release-list::before{background:#af906b}.modal{border-radius:5px;background-color:#ebd8b0;background-image:repeating-linear-gradient(8deg,#5c3e1f08 0 1px,transparent 1px 6px);border:2px solid #513723;box-shadow:0 30px 100px #120805aa}.primary-button{border-radius:3px;background:#9f3228;border-color:#6a241d}.primary-button:hover{background:#b43e30}.secondary-button{border-radius:3px;border-color:#947657;color:#5e4b38}
+@media(min-width:781px){.page-shell{max-width:1420px;padding:0 28px}.game-layout{grid-template-columns:minmax(620px,860px) 420px;gap:24px;justify-content:center}.board-panel{min-width:0}.game-sidebar{min-height:820px}.site-footer{padding-top:19px}}
+@media(max-width:780px){.scorecard-title{font-size:22px}.game-sidebar{padding:18px;border-width:1px}.dice::before{display:none}#updates-page{padding:0 20px 25px}.token.in-yard{width:7%;height:7%}}
 </style>
 </head>
 <body>
@@ -79,19 +94,15 @@
     </header>
 
     <main id="game-page">
-      <section class="intro" aria-label="欢迎">
-        <div><p class="eyebrow">A LITTLE LUCK. A LITTLE STRATEGY.</p><h1>下一步，由你决定<span>。</span></h1></div>
-        <p class="intro-copy">一点运气，一点巧思。<br>与电脑来一场轻松的棋盘较量。</p>
-      </section>
-
       <div class="game-layout">
         <section class="board-panel" aria-label="Ludo 棋盘">
-          <div class="board-heading"><span class="board-title">经典棋盘 <span>01</span></span><span class="turn-badge" id="turn-badge"><i></i>等待开局</span></div>
+          <div class="board-heading"><span class="board-title">经典纸板棋盘 <span>01</span></span><span class="turn-badge" id="turn-badge"><i></i>等待开局</span></div>
           <div class="board-frame"><div class="board-stage" id="board-stage"><svg id="board-svg" viewBox="0 0 600 600" aria-hidden="true"></svg><div id="token-layer" class="token-layer"></div></div></div>
           <div class="board-footer"><span><span class="legend-star" aria-hidden="true">☆</span>安全格，棋子不会被吃</span><span>四枚棋子到家，即获胜<span class="tiny-arrow" aria-hidden="true">↗</span></span></div>
         </section>
 
         <aside class="game-sidebar" aria-label="对局操作">
+          <h2 class="scorecard-title"><span></span>对局记分<span></span></h2>
           <section class="players" aria-label="双方进度">
             <div class="player-row opponent" id="player-1"><div class="avatar ai-avatar" aria-hidden="true"><svg viewBox="0 0 28 28"><rect x="6" y="8" width="16" height="14" rx="5"/><path d="M14 4v4M3 13v5M25 13v5"/><circle cx="11" cy="14" r="1"/><circle cx="17" cy="14" r="1"/><path d="M11 18h6"/></svg></div><div class="player-label"><strong>电脑对手</strong><span id="opponent-level">中级 · 稳健出招</span></div><div class="player-progress"><div class="progress-dots" id="dots-1"></div><span><b id="finished-1">0</b> / 4 到家</span></div></div>
             <div class="versus-line"><span>1 VS 1</span></div>
@@ -124,11 +135,12 @@
     <main id="updates-page" hidden aria-labelledby="updates-title">
       <section class="updates-intro">
         <div><p class="eyebrow">THE LUDO JOURNAL</p><h1 id="updates-title" tabindex="-1">版本更新<span>。</span></h1><p class="updates-description">记录每一次完善，让下一局更尽兴。</p></div>
-        <div class="current-release"><span class="current-release-label"><i></i>当前版本</span><strong>v0.4.0</strong><span>一掷之间 · 离线版</span></div>
+        <div class="current-release"><span class="current-release-label"><i></i>当前版本</span><strong>v0.5.0</strong><span>一掷之间 · 离线版</span></div>
       </section>
       <div class="updates-layout">
         <aside class="updates-aside" aria-label="关于更新记录"><p class="eyebrow">SMALL STEPS, BETTER PLAY.</p><h2>每一步，<br>都更好一点。</h2><p>从第一颗骰子，到更从容的对局。这里收录已经发布的新功能与体验修复。</p><div class="journal-mark" aria-hidden="true"><i></i><i></i><i></i><i></i></div><p class="updates-pause-note">查看记录时，当前棋局会暂停。<br>返回游戏即可继续。</p></aside>
-        <section class="release-list" aria-label="版本发布历史"><article class="release-entry latest" aria-labelledby="release-v0-4-0"><div class="release-meta"><span class="release-version">v0.4.0</span><time datetime="2026-09-08">2026年09月08日</time><span class="release-latest-label">最新</span></div><div class="release-content"><h2 id="release-v0-4-0">吃子与到家奖励再掷</h2><p class="release-summary">吃掉对手棋子，或将棋子送到 HOME 终点后，可以继续掷骰。</p><div class="release-change"><span class="change-kind">新增</span><ul><li>吃子或单枚棋子到达 HOME 终点，获得一次额外掷骰；双方均适用。</li><li>同一步多个奖励条件合并为一次再掷；奖励行动再次吃子或到家，可以再次获得机会。</li><li>最后一枚棋子到家立即获胜；连续第三个 6 仍跳过行动并换人。</li></ul></div><div class="release-change"><span class="change-kind improve">优化</span><ul><li>四档 AI 与终极归家残局求解同步使用新规则。</li><li>回合提示、棋局动态和玩法说明显示额外掷骰奖励。</li></ul></div><p class="release-note">进入归家通道不等于到达 HOME 终点。此前公布的对战胜率属于旧棋规，新规则下的难度胜率尚未重新验证。</p></div></article>
+        <section class="release-list" aria-label="版本发布历史"><article class="release-entry latest" aria-labelledby="release-v0-5-0"><div class="release-meta"><span class="release-version">v0.5.0</span><time datetime="2026-09-08">2026年09月08日</time><span class="release-latest-label">最新</span></div><div class="release-content"><h2 id="release-v0-5-0">复古桌游界面</h2><p class="release-summary">把棋盘、棋子和操作区重新设计成一套有岁月感的实体桌游。</p><div class="release-change"><span class="change-kind improve">优化</span><ul><li>棋盘改为硬边纸板结构，增加旧纸底色、深色格线、木框与折痕细节。</li><li>红黄棋子改为更厚的做旧木片，加入木纹、磨损色差、立体侧边和落桌阴影。</li><li>操作区改为旧纸记分板，并统一骰盘、难度按钮、对局动态和重开入口的视觉语言。</li><li>压缩顶部欢迎区域，让桌面浏览器优先展示完整棋盘与当前操作。</li></ul></div><p class="release-note">本次只更新网页外观与布局，Ludo 规则、四档 AI 策略和离线能力保持原版本行为。</p></div></article>
+<article class="release-entry" aria-labelledby="release-v0-4-0"><div class="release-meta"><span class="release-version">v0.4.0</span><time datetime="2026-09-08">2026年09月08日</time></div><div class="release-content"><h2 id="release-v0-4-0">吃子与到家奖励再掷</h2><p class="release-summary">吃掉对手棋子，或将棋子送到 HOME 终点后，可以继续掷骰。</p><div class="release-change"><span class="change-kind">新增</span><ul><li>吃子或单枚棋子到达 HOME 终点，获得一次额外掷骰；双方均适用。</li><li>同一步多个奖励条件合并为一次再掷；奖励行动再次吃子或到家，可以再次获得机会。</li><li>最后一枚棋子到家立即获胜；连续第三个 6 仍跳过行动并换人。</li></ul></div><div class="release-change"><span class="change-kind improve">优化</span><ul><li>四档 AI 与终极归家残局求解同步使用新规则。</li><li>回合提示、棋局动态和玩法说明显示额外掷骰奖励。</li></ul></div><p class="release-note">进入归家通道不等于到达 HOME 终点。此前公布的对战胜率属于旧棋规，新规则下的难度胜率尚未重新验证。</p></div></article>
 <article class="release-entry" aria-labelledby="release-v0-3-0"><div class="release-meta"><span class="release-version">v0.3.0</span><time datetime="2026-09-07">2026年09月07日</time></div><div class="release-content"><h2 id="release-v0-3-0">终极 AI v2</h2><p class="release-summary">重新评估完成一局的效率，进一步推演归家阶段的选择。</p><div class="release-change"><span class="change-kind improve">优化</span><ul><li>终极综合考虑出营等待、到家所需点数、被吃风险和多枚棋子的归家效率，评估后续走法。</li><li>双方未完成棋子全部进入归家通道后，终极会尝试完整求解残局，再决定走哪一枚棋子。</li><li>残局推演与常规搜索共用每步思考时间，计算到限时采用已完成的结果。</li></ul></div><p class="release-note">精确求解仅适用于上述归家残局。本轮独立验证尚未证明终极稳定强于高级，局部求解能力也不代表整局最优。</p></div></article>
 <article class="release-entry" aria-labelledby="release-v0-2-1"><div class="release-meta"><span class="release-version">v0.2.1</span><time datetime="2026-09-07">2026年09月07日</time></div><div class="release-content"><h2 id="release-v0-2-1">版本更新记录</h2><p class="release-summary">游戏里的每一次变化，现在都可以在这里查看。</p><div class="release-change"><span class="change-kind">新增</span><ul><li>新增版本更新页面，按时间展示已发布的功能与修复。</li><li>新增游戏内入口，方便查看当前版本和历史更新。</li><li>查看记录时暂停棋局，返回游戏后继续当前对局。</li><li>更新记录随游戏一起保存，离线打开也能阅读。</li></ul></div></div></article>
 <article class="release-entry" aria-labelledby="release-v0-2-0"><div class="release-meta"><span class="release-version">v0.2.0</span><time datetime="2026-09-07">2026年09月07日</time></div><div class="release-content"><h2 id="release-v0-2-0">高级与终极 AI 登场</h2><p class="release-summary">开放另外两档难度，电脑会考虑后续骰点和双方的应对。</p><div class="release-change"><span class="change-kind">新增</span><ul><li>开放高级与终极难度，开局时可在四档 AI 中选择。</li><li>高级会推演后续走法，终极拥有更多思考额度。</li><li>两档新 AI 均在本地运行，游戏加载后断网也能继续对局。</li></ul></div><div class="release-change"><span class="change-kind improve">优化</span><ul><li>电脑思考时仍可操作界面和重新开局。</li><li>电脑思考发生异常时，会使用备用走法继续对局，并显示兼容模式。</li></ul></div><p class="release-note">该版本发布时标记为 0.2。四档难度已开放，终极是否稳定强于高级仍需更多对战验证。</p></div></article>
@@ -138,7 +150,7 @@
       </div>
       <div class="updates-end"><span aria-hidden="true">✦</span><p>下一局，再见。</p><a href="#game" data-game-link>回到棋盘 <span aria-hidden="true">↗</span></a></div>
     </main>
-    <footer class="site-footer"><span>一掷之间，享受每一步。</span><span>离线版 0.4.0 <i>·</i> <a href="#updates" data-updates-link>版本更新</a></span></footer>
+    <footer class="site-footer"><span>一掷之间，享受每一步。</span><span>离线版 0.5.0 <i>·</i> <a href="#updates" data-updates-link>版本更新</a></span></footer>
     <div id="announcer" class="sr-only" role="status" aria-live="polite" aria-atomic="true"></div>
   </div>
 
@@ -3392,45 +3404,44 @@ self.onmessage = function (event) {
   }
 
   function createBoard() {
-    let svg = '<rect width="600" height="600" rx="12" fill="#fbfaf3"/>';
+    let svg = '<defs><filter id="paper-grain" x="-10%" y="-10%" width="120%" height="120%"><feTurbulence type="fractalNoise" baseFrequency=".62" numOctaves="3" seed="17" result="noise"/><feColorMatrix in="noise" type="saturate" values="0" result="mono"/><feComponentTransfer in="mono"><feFuncA type="table" tableValues="0 .12"/></feComponentTransfer></filter><linearGradient id="aged-paper" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f3e4bf"/><stop offset=".48" stop-color="#e8d4a9"/><stop offset="1" stop-color="#d5bd8d"/></linearGradient></defs>';
+    svg += '<rect x="3" y="3" width="594" height="594" fill="#c39a61" stroke="#251b14" stroke-width="6"/><rect x="11" y="11" width="578" height="578" fill="url(#aged-paper)" stroke="#5e3d27" stroke-width="3"/><rect x="16" y="16" width="568" height="568" fill="#ead9b4" stroke="#241b15" stroke-width="2"/>';
     const quadrants = [
-      { x: 0, y: 0, fill: "#bccaa9", ink: "#7c9470", label: "", inactive: true },
-      { x: 360, y: 0, fill: "#edca72", ink: "#98712a", label: "电脑", inactive: false },
-      { x: 0, y: 360, fill: "#dc8b77", ink: "#994734", label: "你的基地", inactive: false },
-      { x: 360, y: 360, fill: "#b8cbd0", ink: "#839ca1", label: "", inactive: true }
+      { x: 0, y: 0, fill: "#75975c", dark: "#314a31", inactive: true },
+      { x: 360, y: 0, fill: "#d5ae3e", dark: "#6f5721", inactive: false },
+      { x: 0, y: 360, fill: "#c84d37", dark: "#6d2a20", inactive: false },
+      { x: 360, y: 360, fill: "#4e8da3", dark: "#254d5b", inactive: true }
     ];
     quadrants.forEach(q => {
-      svg += `<rect x="${q.x + 6}" y="${q.y + 6}" width="228" height="228" rx="9" fill="${q.fill}" fill-opacity="${q.inactive ? 0.63 : 0.83}"/>`;
-      svg += `<rect x="${q.x + 36}" y="${q.y + 36}" width="168" height="168" rx="19" fill="#faf9ef" fill-opacity="${q.inactive ? 0.56 : 0.89}"/>`;
-      if (q.inactive) {
-        [80, 160].forEach(x => [80, 160].forEach(y => { svg += `<circle cx="${q.x + x}" cy="${q.y + y}" r="18" fill="${q.fill}" fill-opacity="0.35" stroke="${q.ink}" stroke-opacity="0.18"/>`; }));
-        svg += `<path d="M${q.x + 107},${q.y + 120}h26" stroke="${q.ink}" opacity=".28"/>`;
-      } else {
-        svg += `<text x="${q.x + 120}" y="${q.y + 225}" text-anchor="middle" fill="${q.ink}" font-size="10" font-family="Microsoft YaHei,sans-serif" letter-spacing="2">${q.label}</text>`;
-      }
+      svg += `<rect x="${q.x + 16}" y="${q.y + 16}" width="224" height="224" fill="${q.fill}" stroke="#2d2920" stroke-width="2"/>`;
+      svg += `<rect x="${q.x + 55}" y="${q.y + 55}" width="150" height="150" fill="#eadcb9" stroke="#2d2920" stroke-width="4"/>`;
+      [80, 160].forEach(x => [80, 160].forEach(y => {
+        svg += `<rect x="${q.x + x - 20}" y="${q.y + y - 20}" width="40" height="40" fill="${q.inactive ? q.fill : '#eadcb9'}" fill-opacity="${q.inactive ? '.92' : '.36'}" stroke="${q.dark}" stroke-width="2"/>`;
+      }));
     });
-    const startColors = { 0: "#d66250", 13: "#b8c6aa", 26: "#e6b647", 39: "#b8c9d0" };
+    const startColors = { 0: "#c84d37", 13: "#75975c", 26: "#d5ae3e", 39: "#4e8da3" };
     E.RING.forEach((cell, index) => {
       const x = cell.col * 40, y = cell.row * 40;
       const isSafe = E.SAFE_INDICES.includes(index);
-      const fill = startColors[index] || (isSafe ? "#ecefe1" : "#fffef9");
-      svg += `<rect x="${x + 1.5}" y="${y + 1.5}" width="37" height="37" rx="3" fill="${fill}" stroke="#d5d8c9" stroke-width=".8"/>`;
-      if (isSafe) svg += star(x + 20, y + 20, 9, "none", index === 0 ? "#fff1de" : index === 26 ? "#a88435" : "#a7b39a");
+      const fill = startColors[index] || "#eadbb8";
+      svg += `<rect x="${x}" y="${y}" width="40" height="40" fill="${fill}" stroke="#2d302b" stroke-width="1.7"/>`;
+      if (isSafe) svg += star(x + 20, y + 20, 11, index in startColors ? "#eadbb8" : "none", "#335f58");
       if ([1, 27].includes(index)) {
-        svg += `<path d="M${x + 20} ${y + (index === 1 ? 27 : 13)}v${index === 1 ? -14 : 14}m-4 ${index === 1 ? 4 : -4} 4 ${index === 1 ? -4 : 4} 4 ${index === 1 ? 4 : -4}" fill="none" stroke="${index === 1 ? '#cf8b76' : '#d1b064'}" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>`;
+        svg += `<path d="M${x + 20} ${y + (index === 1 ? 29 : 11)}v${index === 1 ? -17 : 17}m-6 ${index === 1 ? 6 : -6} 6 ${index === 1 ? -6 : 6} 6 ${index === 1 ? 6 : -6}" fill="none" stroke="#3c392f" stroke-width="2" stroke-linecap="square"/>`;
       }
     });
     E.HOME_PATHS.forEach((path, player) => path.forEach(cell => {
-      svg += `<rect x="${cell.col * 40 + 1.5}" y="${cell.row * 40 + 1.5}" width="37" height="37" rx="3" fill="${player ? '#efd591' : '#e7ab99'}" stroke="${player ? '#dabb72' : '#d89883'}" stroke-width=".8"/>`;
+      svg += `<rect x="${cell.col * 40}" y="${cell.row * 40}" width="40" height="40" fill="${player ? '#d5ae3e' : '#c84d37'}" stroke="#30302b" stroke-width="1.7"/>`;
     }));
     // 非参赛颜色保留棋盘结构，降低饱和度。
     for (let i = 1; i <= 5; i++) {
-      svg += `<rect x="${i * 40 + 1.5}" y="281.5" width="37" height="37" rx="3" fill="#dce4d0" stroke="#c3cfb8" stroke-width=".8"/>`;
-      svg += `<rect x="${(14 - i) * 40 + 1.5}" y="281.5" width="37" height="37" rx="3" fill="#d9e4e5" stroke="#c3d2d5" stroke-width=".8"/>`;
+      svg += `<rect x="${i * 40}" y="280" width="40" height="40" fill="#75975c" stroke="#30302b" stroke-width="1.7"/>`;
+      svg += `<rect x="${(14 - i) * 40}" y="280" width="40" height="40" fill="#4e8da3" stroke="#30302b" stroke-width="1.7"/>`;
     }
-    svg += '<path d="M240 240 300 300 240 360Z" fill="#bccaa9"/><path d="M240 240 360 240 300 300Z" fill="#e8c264"/><path d="M360 240 360 360 300 300Z" fill="#b8cbd0"/><path d="M240 360 300 300 360 360Z" fill="#d9836e"/>';
-    svg += '<path d="M240 240h120v120H240Z" fill="none" stroke="#f7f5e9" stroke-width="2"/><circle cx="300" cy="300" r="17" fill="#fbf8e8" stroke="#ede7d4"/>';
-    svg += star(300, 300, 8, "#9faa8b", "none");
+    svg += '<path d="M240 240 300 300 240 360Z" fill="#75975c"/><path d="M240 240 360 240 300 300Z" fill="#d5ae3e"/><path d="M360 240 360 360 300 300Z" fill="#4e8da3"/><path d="M240 360 300 300 360 360Z" fill="#c84d37"/>';
+    svg += '<path d="M240 240h120v120H240Z" fill="none" stroke="#2b2b26" stroke-width="3"/><path d="M240 240 360 360M360 240 240 360" stroke="#333029" stroke-width="1.5"/>';
+    svg += '<text x="300" y="306" text-anchor="middle" fill="#2f2a22" font-size="15" font-weight="700" font-family="Georgia,serif" letter-spacing="1">HOME</text>';
+    svg += '<rect x="16" y="16" width="568" height="568" fill="#5b3f27" opacity=".16" filter="url(#paper-grain)" pointer-events="none"/><path d="M300 13v574" stroke="#67442b" stroke-opacity=".34" stroke-width="2"/><path d="M303 13v574" stroke="#f4e5c2" stroke-opacity=".22"/>';
     $("board-svg").innerHTML = svg;
     for (let player = 0; player < 2; player++) {
       for (let token = 0; token < 4; token++) {

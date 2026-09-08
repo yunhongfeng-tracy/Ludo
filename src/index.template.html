@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#f4f1e8">
+  <meta name="theme-color" content="#3b1f14">
   <meta name="description" content="一场轻松的 Ludo 棋局。与电脑对战，离线也能玩。">
   <title>LUDO · 一掷之间</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='2' y='2' width='28' height='28' rx='8' fill='%23203e34'/%3E%3Ccircle cx='11' cy='11' r='3' fill='%23f8f4e8'/%3E%3Ccircle cx='21' cy='21' r='3' fill='%23f8f4e8'/%3E%3C/svg%3E">
@@ -23,19 +23,15 @@
     </header>
 
     <main id="game-page">
-      <section class="intro" aria-label="欢迎">
-        <div><p class="eyebrow">A LITTLE LUCK. A LITTLE STRATEGY.</p><h1>下一步，由你决定<span>。</span></h1></div>
-        <p class="intro-copy">一点运气，一点巧思。<br>与电脑来一场轻松的棋盘较量。</p>
-      </section>
-
       <div class="game-layout">
         <section class="board-panel" aria-label="Ludo 棋盘">
-          <div class="board-heading"><span class="board-title">经典棋盘 <span>01</span></span><span class="turn-badge" id="turn-badge"><i></i>等待开局</span></div>
+          <div class="board-heading"><span class="board-title">经典纸板棋盘 <span>01</span></span><span class="turn-badge" id="turn-badge"><i></i>等待开局</span></div>
           <div class="board-frame"><div class="board-stage" id="board-stage"><svg id="board-svg" viewBox="0 0 600 600" aria-hidden="true"></svg><div id="token-layer" class="token-layer"></div></div></div>
           <div class="board-footer"><span><span class="legend-star" aria-hidden="true">☆</span>安全格，棋子不会被吃</span><span>四枚棋子到家，即获胜<span class="tiny-arrow" aria-hidden="true">↗</span></span></div>
         </section>
 
         <aside class="game-sidebar" aria-label="对局操作">
+          <h2 class="scorecard-title"><span></span>对局记分<span></span></h2>
           <section class="players" aria-label="双方进度">
             <div class="player-row opponent" id="player-1"><div class="avatar ai-avatar" aria-hidden="true"><svg viewBox="0 0 28 28"><rect x="6" y="8" width="16" height="14" rx="5"/><path d="M14 4v4M3 13v5M25 13v5"/><circle cx="11" cy="14" r="1"/><circle cx="17" cy="14" r="1"/><path d="M11 18h6"/></svg></div><div class="player-label"><strong>电脑对手</strong><span id="opponent-level">中级 · 稳健出招</span></div><div class="player-progress"><div class="progress-dots" id="dots-1"></div><span><b id="finished-1">0</b> / 4 到家</span></div></div>
             <div class="versus-line"><span>1 VS 1</span></div>
