@@ -33,12 +33,10 @@ html = html.replaceAll("<!--__VERSION__-->", escapeHtml(version)).replace("<!--_
 const visualAssets = {
   "board-complete": "src/assets/vintage/board-complete.png",
   "board-cleanplate": "src/assets/vintage/board-cleanplate.png",
-  "right-score-panel": "src/assets/vintage/right-score-panel.png",
   "outer-chrome": "src/assets/vintage/outer-chrome.png",
   "paper-texture": "src/assets/vintage/paper-texture.png",
   "tabletop-background": "src/assets/vintage/tabletop-background.jpg",
-  "dice-cup-empty": "src/assets/vintage/dice-cup-empty.png",
-  "die-five": "src/assets/vintage/dice-face-five-cutout.png"
+  "dice-cup-empty": "src/assets/vintage/dice-cup-empty.png"
 };
 const assetVariables = `:root{${Object.entries(visualAssets).map(([id, file]) => {
   const data = readBinary(file).toString("base64");

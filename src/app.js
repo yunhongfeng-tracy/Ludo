@@ -314,9 +314,11 @@
       title = again ? "再掷一次，继续出发" : "轮到你了"; description = again ? `${bonusReason || "掷出 6"}，获得一次再掷机会。` : "点击下方按钮，掷出你的下一步。"; label = "掷骰子"; owner = "你的回合"; badge = "你的回合"; footnote = again ? "同一步奖励不叠加；连续第三个 6 结束回合。" : "掷出 6，可以让一枚棋子离开基地。"; enabled = true;
     }
     $("status-title").textContent = title;
+    $("status-title").classList.toggle("compact-title", title.length > 7);
     $("status-description").textContent = description;
     $("status-description").classList.toggle("error-notice", Boolean(fatalError));
     $("roll-label").textContent = label;
+    $("roll-button").classList.toggle("compact-label", label.length > 7);
     $("turn-owner").textContent = owner;
     $("turn-footnote").textContent = footnote;
     $("roll-button").disabled = !enabled || viewingUpdates;
