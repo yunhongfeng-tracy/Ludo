@@ -10,10 +10,10 @@
   const levelDescriptions = { beginner: "轻松练习", medium: "稳健出招", advanced: "推演应对", ultimate: "深思熟虑" };
   const aiClient = window.LudoAIClient.create($("ai-worker-source").textContent);
   const colors = ["#d66250", "#e6b647"];
-  // 与 SVG 基地中的 80/160 中心对齐；渲染时统一加半格得到格心。
+  // 与 SVG 基地中的 88/168 中心对齐；渲染时统一加半格得到格心。
   const yardCells = [
-    [{ row: 10.5, col: 1.5 }, { row: 10.5, col: 3.5 }, { row: 12.5, col: 1.5 }, { row: 12.5, col: 3.5 }],
-    [{ row: 1.5, col: 10.5 }, { row: 1.5, col: 12.5 }, { row: 3.5, col: 10.5 }, { row: 3.5, col: 12.5 }]
+    [{ row: 10.7, col: 1.7 }, { row: 10.7, col: 3.7 }, { row: 12.7, col: 1.7 }, { row: 12.7, col: 3.7 }],
+    [{ row: 1.7, col: 10.7 }, { row: 1.7, col: 12.7 }, { row: 3.7, col: 10.7 }, { row: 3.7, col: 12.7 }]
   ];
   const tokenButtons = [[], []];
   const logEntries = [];
@@ -126,8 +126,8 @@
     ];
     quadrants.forEach(q => {
       svg += `<rect x="${q.x + 16}" y="${q.y + 16}" width="224" height="224" fill="${q.fill}" stroke="#2d2920" stroke-width="2"/>`;
-      svg += `<rect x="${q.x + 55}" y="${q.y + 55}" width="150" height="150" fill="#eadcb9" stroke="#2d2920" stroke-width="4"/>`;
-      [80, 160].forEach(x => [80, 160].forEach(y => {
+      svg += `<rect x="${q.x + 53}" y="${q.y + 53}" width="150" height="150" fill="#eadcb9" stroke="#2d2920" stroke-width="4"/>`;
+      [88, 168].forEach(x => [88, 168].forEach(y => {
         svg += `<rect x="${q.x + x - 20}" y="${q.y + y - 20}" width="40" height="40" fill="${q.inactive ? q.fill : '#eadcb9'}" fill-opacity="${q.inactive ? '.92' : '.36'}" stroke="${q.dark}" stroke-width="2"/>`;
       }));
     });
