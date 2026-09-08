@@ -119,27 +119,33 @@
     let svg = '<defs><filter id="paper-grain" x="-10%" y="-10%" width="120%" height="120%"><feTurbulence type="fractalNoise" baseFrequency=".62" numOctaves="3" seed="17" result="noise"/><feColorMatrix in="noise" type="saturate" values="0" result="mono"/><feComponentTransfer in="mono"><feFuncA type="table" tableValues="0 .12"/></feComponentTransfer></filter><linearGradient id="aged-paper" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f3e4bf"/><stop offset=".48" stop-color="#e8d4a9"/><stop offset="1" stop-color="#d5bd8d"/></linearGradient></defs>';
     svg += '<rect width="600" height="600" fill="url(#aged-paper)"/>';
     const quadrants = [
-      { x: 0, y: 0, fill: "#75975c", dark: "#314a31", inactive: true },
-      { x: 360, y: 0, fill: "#d5ae3e", dark: "#6f5721", inactive: false },
-      { x: 0, y: 360, fill: "#c84d37", dark: "#6d2a20", inactive: false },
-      { x: 360, y: 360, fill: "#4e8da3", dark: "#254d5b", inactive: true }
+      { x: 0, y: 0, fill: "#6f9c57", dark: "#314a31", inactive: true },
+      { x: 360, y: 0, fill: "#d8b43b", dark: "#6f5721", inactive: false },
+      { x: 0, y: 360, fill: "#cc4835", dark: "#6d2a20", inactive: false },
+      { x: 360, y: 360, fill: "#4d91a9", dark: "#254d5b", inactive: true }
     ];
     quadrants.forEach(q => {
       svg += `<rect x="${q.x}" y="${q.y}" width="240" height="240" fill="${q.fill}" stroke="#2d2920" stroke-width="2"/>`;
       svg += `<rect x="${q.x + 45}" y="${q.y + 45}" width="150" height="150" fill="#eadcb9" stroke="#2d2920" stroke-width="4"/>`;
       [80, 160].forEach(x => [80, 160].forEach(y => {
-        svg += `<rect x="${q.x + x - 20}" y="${q.y + y - 20}" width="40" height="40" fill="${q.inactive ? q.fill : '#eadcb9'}" fill-opacity="${q.inactive ? '.92' : '.36'}" stroke="${q.dark}" stroke-width="2"/>`;
+        svg += `<rect x="${q.x + x - 20}" y="${q.y + y - 20}" width="40" height="40" fill="${q.fill}" fill-opacity="${q.inactive ? '.92' : '.82'}" stroke="${q.dark}" stroke-width="2"/>`;
       }));
     });
-    const startColors = { 0: "#c84d37", 13: "#75975c", 26: "#d5ae3e", 39: "#4e8da3" };
+    const startColors = { 0: "#cc4835", 13: "#6f9c57", 26: "#d8b43b", 39: "#4d91a9" };
+    const arrowDirections = { 1: "up", 14: "right", 27: "down", 40: "left" };
     E.RING.forEach((cell, index) => {
       const x = cell.col * 40, y = cell.row * 40;
       const isSafe = E.SAFE_INDICES.includes(index);
       const fill = startColors[index] || "#eadbb8";
       svg += `<rect x="${x}" y="${y}" width="40" height="40" fill="${fill}" stroke="#2d302b" stroke-width="1.7"/>`;
       if (isSafe) svg += star(x + 20, y + 20, 11, index in startColors ? "#eadbb8" : "none", "#335f58");
-      if ([1, 27].includes(index)) {
-        svg += `<path d="M${x + 20} ${y + (index === 1 ? 29 : 11)}v${index === 1 ? -17 : 17}m-6 ${index === 1 ? 6 : -6} 6 ${index === 1 ? -6 : 6} 6 ${index === 1 ? 6 : -6}" fill="none" stroke="#3c392f" stroke-width="2" stroke-linecap="square"/>`;
+      if (arrowDirections[index]) {
+        const direction = arrowDirections[index];
+        const path = direction === "up" ? `M${x + 20} ${y + 30}V${y + 10}M${x + 12} ${y + 18}l8-8 8 8`
+          : direction === "down" ? `M${x + 20} ${y + 10}v20M${x + 12} ${y + 22}l8 8 8-8`
+          : direction === "right" ? `M${x + 10} ${y + 20}h20M${x + 22} ${y + 12}l8 8-8 8`
+          : `M${x + 30} ${y + 20}H${x + 10}M${x + 18} ${y + 12}l-8 8 8 8`;
+        svg += `<path d="${path}" fill="none" stroke="#3c392f" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"/>`;
       }
     });
     E.HOME_PATHS.forEach((path, player) => path.forEach(cell => {
@@ -147,12 +153,12 @@
     }));
     // 非参赛颜色保留棋盘结构，降低饱和度。
     for (let i = 1; i <= 5; i++) {
-      svg += `<rect x="${i * 40}" y="280" width="40" height="40" fill="#75975c" stroke="#30302b" stroke-width="1.7"/>`;
-      svg += `<rect x="${(14 - i) * 40}" y="280" width="40" height="40" fill="#4e8da3" stroke="#30302b" stroke-width="1.7"/>`;
+      svg += `<rect x="${i * 40}" y="280" width="40" height="40" fill="#6f9c57" stroke="#30302b" stroke-width="1.7"/>`;
+      svg += `<rect x="${(14 - i) * 40}" y="280" width="40" height="40" fill="#4d91a9" stroke="#30302b" stroke-width="1.7"/>`;
     }
-    svg += '<path d="M240 240 300 300 240 360Z" fill="#75975c"/><path d="M240 240 360 240 300 300Z" fill="#d5ae3e"/><path d="M360 240 360 360 300 300Z" fill="#4e8da3"/><path d="M240 360 300 300 360 360Z" fill="#c84d37"/>';
+    svg += '<path d="M240 240 300 300 240 360Z" fill="#6f9c57"/><path d="M240 240 360 240 300 300Z" fill="#d8b43b"/><path d="M360 240 360 360 300 300Z" fill="#4d91a9"/><path d="M240 360 300 300 360 360Z" fill="#cc4835"/>';
     svg += '<path d="M240 240h120v120H240Z" fill="none" stroke="#2b2b26" stroke-width="3"/><path d="M240 240 360 360M360 240 240 360" stroke="#333029" stroke-width="1.5"/>';
-    svg += '<text x="300" y="306" text-anchor="middle" fill="#2f2a22" font-size="15" font-weight="700" font-family="Georgia,serif" letter-spacing="1">HOME</text>';
+    svg += '<g fill="#2f2a22" font-size="11" font-weight="700" font-family="Georgia,serif" letter-spacing=".5"><text x="300" y="266" text-anchor="middle">HOME</text><text x="300" y="343" text-anchor="middle">HOME</text><text x="265" y="304" text-anchor="middle" transform="rotate(90 265 300)">HOME</text><text x="335" y="304" text-anchor="middle" transform="rotate(-90 335 300)">HOME</text></g>';
     svg += '<rect width="600" height="600" fill="#5b3f27" opacity=".16" filter="url(#paper-grain)" pointer-events="none"/><path d="M300 0v600" stroke="#67442b" stroke-opacity=".34" stroke-width="2"/><path d="M303 0v600" stroke="#f4e5c2" stroke-opacity=".22"/><rect x="1.5" y="1.5" width="597" height="597" fill="none" stroke="#292019" stroke-width="3"/>';
     $("board-svg").innerHTML = svg;
     for (let player = 0; player < 2; player++) {

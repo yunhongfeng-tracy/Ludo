@@ -1,6 +1,6 @@
 {
   "name": "ludo-offline",
-  "version": "0.5.3",
+  "version": "0.5.4",
   "private": true,
   "description": "离线 Ludo 单人棋局，四档本地策略",
   "scripts": {
