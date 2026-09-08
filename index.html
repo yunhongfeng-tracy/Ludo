@@ -91,7 +91,7 @@ body{background-color:#3a2016;background-image:radial-gradient(ellipse at 18% -1
 @media(min-width:1200px){
   html{scrollbar-gutter:auto}
   body{background-color:#3a2016;background-image:var(--asset-outer-chrome),var(--asset-tabletop-background);background-position:top center,center;background-size:1536px 1024px,cover;background-repeat:no-repeat;background-attachment:scroll,fixed}
-  body:has(#game-page:not([hidden])){overflow:hidden}
+  body:has(#game-page:not([hidden])){overflow:auto}
   .page-shell{width:1354px;max-width:1354px;padding:0}
   .site-header{width:100%;height:76px;margin:0;padding:0 11px;border:0;transform:translateY(8px)}
   .brand{flex:0 0 390px;width:390px;height:57px;gap:14px;background:none;transform:translate(-7px,-3px)}.brand>*{opacity:0}.brand-symbol{width:44px;height:44px;gap:5px}.brand-word{font-size:48px}.brand-caption{font-size:17px;line-height:1.2;padding-left:18px;margin-left:0}
@@ -129,11 +129,12 @@ body{background-color:#3a2016;background-image:radial-gradient(ellipse at 18% -1
   .activity-panel{height:133px;min-height:133px;flex:0 0 133px;padding-top:13px}.activity-panel .section-line{font-size:20px}.activity-list{height:76px;min-height:76px;margin-top:10px}.activity-list li{font-size:16px;line-height:1.6;margin-bottom:5px}.log-dot{width:10px;height:10px;margin-top:8px}
   .restart-button{height:40px;min-height:40px;flex-shrink:0;margin:0;border:0;font-size:17px}.restart-button::before,.restart-button::after{content:"";height:1px;background:#9b7a58;flex:1}.site-footer{display:none}
 
-  .token{width:54px;height:54px;border:0;background:transparent;box-shadow:none;color:#f8dfba;font-size:18px;text-shadow:0 1px #42110c}
+  .token-layer .token.red,.token-layer .token.yellow{width:54px;height:54px;border:0;border-radius:50%;background:transparent;box-shadow:none;color:#f8dfba;font-size:18px;text-shadow:0 1px #42110c}
   .token-face{position:relative;z-index:1;width:48px;height:48px;display:grid;place-items:center;border:2px solid #64261d;border-radius:50%;background:radial-gradient(circle at 32% 22%,#ffe2b477 0 5%,transparent 19%),repeating-linear-gradient(92deg,#4a160f28 0 1px,transparent 1px 5px),radial-gradient(circle at 42% 38%,#cf5945,#a52f25 76%);box-shadow:0 4px 0 #6a251b,0 7px 1px #32130dcc,0 9px 10px #1d0c0766,inset 0 2px 2px #ffd7aa99,inset 0 -3px 4px #5d160f88;border-radius:50%}
   .token.yellow .token-face{border-color:#6f4e19;background:radial-gradient(circle at 32% 22%,#fff3c899 0 5%,transparent 19%),repeating-linear-gradient(88deg,#5d40182b 0 1px,transparent 1px 5px),radial-gradient(circle at 42% 38%,#e0b643,#b98124 76%);box-shadow:0 4px 0 #80591d,0 7px 1px #3a260dcc,0 9px 10px #1d0c0766,inset 0 2px 2px #fff2bd,inset 0 -3px 4px #6e481588;color:#523814;text-shadow:0 1px #efd07b}
-  .token.in-yard{width:64px;height:64px;border:2px solid #6b281f;border-radius:0;background:#c34534;box-shadow:0 4px 5px #28110b55;font-size:18px}.token.yellow.in-yard{border-color:#74551e;background:#d4aa38}.token.in-yard .token-face::before{display:none}
-  .token.stacked{width:39px;height:39px;font-size:12px}.token.stacked .token-face{width:32px;height:32px;border-width:1px;box-shadow:0 3px 0 #6a251b,0 5px 5px #24100866}.token.finished{width:34px;height:34px;font-size:11px}.token.finished .token-face{width:28px;height:28px}
+  /* 基地格已印在底图上，动态层只画圆棋子。离开基地后恢复行进路径坐标。 */
+  .token.in-yard{left:var(--yard-left)!important;top:var(--yard-top)!important}
+  .token-layer .token.stacked{width:39px;height:39px;font-size:12px}.token.stacked .token-face{width:32px;height:32px;border-width:1px;box-shadow:0 3px 0 #6a251b,0 5px 5px #24100866}.token-layer .token.finished{width:34px;height:34px;font-size:11px}.token.finished .token-face{width:28px;height:28px}
   .token.legal::before{inset:-5px;border-width:3px}.token.legal::after{top:-16px}.token.legal:hover,.token.legal:focus-visible{transform:translate(-50%,-50%) scale(1.08)}
 }
 </style>
@@ -193,11 +194,12 @@ body{background-color:#3a2016;background-image:radial-gradient(ellipse at 18% -1
     <main id="updates-page" hidden aria-labelledby="updates-title">
       <section class="updates-intro">
         <div><p class="eyebrow">THE LUDO JOURNAL</p><h1 id="updates-title" tabindex="-1">版本更新<span>。</span></h1><p class="updates-description">记录每一次完善，让下一局更尽兴。</p></div>
-        <div class="current-release"><span class="current-release-label"><i></i>当前版本</span><strong>v0.5.5</strong><span>一掷之间 · 离线版</span></div>
+        <div class="current-release"><span class="current-release-label"><i></i>当前版本</span><strong>v0.5.6</strong><span>一掷之间 · 离线版</span></div>
       </section>
       <div class="updates-layout">
         <aside class="updates-aside" aria-label="关于更新记录"><p class="eyebrow">SMALL STEPS, BETTER PLAY.</p><h2>每一步，<br>都更好一点。</h2><p>从第一颗骰子，到更从容的对局。这里收录已经发布的新功能与体验修复。</p><div class="journal-mark" aria-hidden="true"><i></i><i></i><i></i><i></i></div><p class="updates-pause-note">查看记录时，当前棋局会暂停。<br>返回游戏即可继续。</p></aside>
-        <section class="release-list" aria-label="版本发布历史"><article class="release-entry latest" aria-labelledby="release-v0-5-5"><div class="release-meta"><span class="release-version">v0.5.5</span><time datetime="2026-09-09">2026年09月09日</time><span class="release-latest-label">最新</span></div><div class="release-content"><h2 id="release-v0-5-5">复古效果稿还原</h2><p class="release-summary">桌面版改用效果稿切片与动态交互层，棋盘、记分板和木桌回到确认的复古视觉。</p><div class="release-change"><span class="change-kind improve">优化</span><ul><li>从确认的 1536×1024 效果稿切出完整棋盘与无棋子底图，开局前后按状态切换。</li><li>棋盘、记分板、按钮、骰盅、难度区和棋局动态按效果稿坐标重新排版。</li><li>新增连续胡桃木桌面、旧纸纹理与象牙色骰子素材，并全部内嵌到单文件网页。</li><li>动态棋子改为带方形木托和圆形厚木棋面的分层结构。</li></ul></div><p class="release-note">本次只调整桌面端视觉和布局，棋规、回合流程、四档 AI 与胜率测试逻辑没有修改。</p></div></article>
+        <section class="release-list" aria-label="版本发布历史"><article class="release-entry latest" aria-labelledby="release-v0-5-6"><div class="release-meta"><span class="release-version">v0.5.6</span><time datetime="2026-09-09">2026年09月09日</time><span class="release-latest-label">最新</span></div><div class="release-content"><h2 id="release-v0-5-6">修复开局棋子重叠与偏移</h2><p class="release-summary">开始对局后，棋子准确落在基地格中央，掷骰和移动时保持一致。</p><div class="release-change"><span class="change-kind fix">修复</span><ul><li>移除与底图重复的动态方形底座，红黄棋子只保留一层圆形棋面。</li><li>按复古棋盘切图的实际格心定位八枚基地棋子，出基地后使用正常行进路径。</li><li>较矮的桌面窗口允许滚动，避免底部棋子和操作按钮被裁切。</li></ul></div></div></article>
+<article class="release-entry" aria-labelledby="release-v0-5-5"><div class="release-meta"><span class="release-version">v0.5.5</span><time datetime="2026-09-09">2026年09月09日</time></div><div class="release-content"><h2 id="release-v0-5-5">复古效果稿还原</h2><p class="release-summary">桌面版改用效果稿切片与动态交互层，棋盘、记分板和木桌回到确认的复古视觉。</p><div class="release-change"><span class="change-kind improve">优化</span><ul><li>从确认的 1536×1024 效果稿切出完整棋盘与无棋子底图，开局前后按状态切换。</li><li>棋盘、记分板、按钮、骰盅、难度区和棋局动态按效果稿坐标重新排版。</li><li>新增连续胡桃木桌面、旧纸纹理与象牙色骰子素材，并全部内嵌到单文件网页。</li><li>动态棋子改为带方形木托和圆形厚木棋面的分层结构。</li></ul></div><p class="release-note">本次只调整桌面端视觉和布局，棋规、回合流程、四档 AI 与胜率测试逻辑没有修改。</p></div></article>
 <article class="release-entry" aria-labelledby="release-v0-5-4"><div class="release-meta"><span class="release-version">v0.5.4</span><time datetime="2026-09-08">2026年09月08日</time></div><div class="release-content"><h2 id="release-v0-5-4">效果图细节还原</h2><p class="release-summary">继续按确认的复古效果图校正棋盘印刷细节。</p><div class="release-change"><span class="change-kind improve">优化</span><ul><li>中央终点补齐四个方向的 HOME 标识。</li><li>四个方向补齐行进箭头，红黄绿蓝调整为更接近效果图的旧印刷色。</li><li>基地托盘格改为对应阵营实色，同时保留厚木棋子、白色骰点和放大的棋局动态。</li></ul></div></div></article>
 <article class="release-entry" aria-labelledby="release-v0-5-3"><div class="release-meta"><span class="release-version">v0.5.3</span><time datetime="2026-09-08">2026年09月08日</time></div><div class="release-content"><h2 id="release-v0-5-3">棋盘网格整体对齐</h2><p class="release-summary">四个大色区、十字通道和棋盘外边缘统一使用同一套网格边界。</p><div class="release-change"><span class="change-kind fix">修复</span><ul><li>移除四个大色区的 16px 内缩，使色区边缘与十字通道严格衔接。</li><li>棋盘改为完整 600×600 坐标面，四个基地内框、小格和棋子同步回到对应中心。</li></ul></div></div></article>
 <article class="release-entry" aria-labelledby="release-v0-5-2"><div class="release-meta"><span class="release-version">v0.5.2</span><time datetime="2026-09-08">2026年09月08日</time></div><div class="release-content"><h2 id="release-v0-5-2">基地对齐与动态区优化</h2><p class="release-summary">四个基地格回到几何中心，棋局动态拥有更大的阅读区域。</p><div class="release-change"><span class="change-kind fix">修复</span><ul><li>重新计算四个基地格的中心坐标，并同步校正基地棋子的位置。</li><li>扩大棋局动态区域，放大标题、记录文字和状态圆点。</li><li>骰面改为深绿色，点数改为高对比白色。</li></ul></div></div></article>
@@ -213,7 +215,7 @@ body{background-color:#3a2016;background-image:radial-gradient(ellipse at 18% -1
       </div>
       <div class="updates-end"><span aria-hidden="true">✦</span><p>下一局，再见。</p><a href="#game" data-game-link>回到棋盘 <span aria-hidden="true">↗</span></a></div>
     </main>
-    <footer class="site-footer"><span>一掷之间，享受每一步。</span><span>离线版 0.5.5 <i>·</i> <a href="#updates" data-updates-link>版本更新</a></span></footer>
+    <footer class="site-footer"><span>一掷之间，享受每一步。</span><span>离线版 0.5.6 <i>·</i> <a href="#updates" data-updates-link>版本更新</a></span></footer>
     <div id="announcer" class="sr-only" role="status" aria-live="polite" aria-atomic="true"></div>
   </div>
 
@@ -3366,6 +3368,11 @@ self.onmessage = function (event) {
     [{ row: 10.5, col: 1.5 }, { row: 10.5, col: 3.5 }, { row: 12.5, col: 1.5 }, { row: 12.5, col: 3.5 }],
     [{ row: 1.5, col: 10.5 }, { row: 1.5, col: 12.5 }, { row: 3.5, col: 10.5 }, { row: 3.5, col: 12.5 }]
   ];
+  // 桌面切图的基地格心，坐标相对于 863×858 棋盘图；小屏 SVG 仍使用上面的网格坐标。
+  const vintageYardCenters = [
+    [[150.5, 611], [241.5, 611], [150.5, 701], [241.5, 701]],
+    [[631, 140], [720, 140], [631, 228], [720, 228]]
+  ];
   const tokenButtons = [[], []];
   const logEntries = [];
   const timers = new Set();
@@ -3521,6 +3528,9 @@ self.onmessage = function (event) {
         button.id = `token-${player}-${token}`;
         button.dataset.player = player;
         button.dataset.token = token;
+        const [yardX, yardY] = vintageYardCenters[player][token];
+        button.style.setProperty("--yard-left", `${(yardX - 36) / 800 * 100}%`);
+        button.style.setProperty("--yard-top", `${(yardY - 25) / 800 * 100}%`);
         button.innerHTML = `<span class="token-face">${token + 1}</span>`;
         button.addEventListener("click", () => { if (player === 0) performMove(token, false); });
         tokenButtons[player].push(button);

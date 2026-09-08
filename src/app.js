@@ -15,6 +15,11 @@
     [{ row: 10.5, col: 1.5 }, { row: 10.5, col: 3.5 }, { row: 12.5, col: 1.5 }, { row: 12.5, col: 3.5 }],
     [{ row: 1.5, col: 10.5 }, { row: 1.5, col: 12.5 }, { row: 3.5, col: 10.5 }, { row: 3.5, col: 12.5 }]
   ];
+  // 桌面切图的基地格心，坐标相对于 863×858 棋盘图；小屏 SVG 仍使用上面的网格坐标。
+  const vintageYardCenters = [
+    [[150.5, 611], [241.5, 611], [150.5, 701], [241.5, 701]],
+    [[631, 140], [720, 140], [631, 228], [720, 228]]
+  ];
   const tokenButtons = [[], []];
   const logEntries = [];
   const timers = new Set();
@@ -170,6 +175,9 @@
         button.id = `token-${player}-${token}`;
         button.dataset.player = player;
         button.dataset.token = token;
+        const [yardX, yardY] = vintageYardCenters[player][token];
+        button.style.setProperty("--yard-left", `${(yardX - 36) / 800 * 100}%`);
+        button.style.setProperty("--yard-top", `${(yardY - 25) / 800 * 100}%`);
         button.innerHTML = `<span class="token-face">${token + 1}</span>`;
         button.addEventListener("click", () => { if (player === 0) performMove(token, false); });
         tokenButtons[player].push(button);

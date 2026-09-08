@@ -81,7 +81,7 @@ body{background-color:#3a2016;background-image:radial-gradient(ellipse at 18% -1
 @media(min-width:1200px){
   html{scrollbar-gutter:auto}
   body{background-color:#3a2016;background-image:var(--asset-outer-chrome),var(--asset-tabletop-background);background-position:top center,center;background-size:1536px 1024px,cover;background-repeat:no-repeat;background-attachment:scroll,fixed}
-  body:has(#game-page:not([hidden])){overflow:hidden}
+  body:has(#game-page:not([hidden])){overflow:auto}
   .page-shell{width:1354px;max-width:1354px;padding:0}
   .site-header{width:100%;height:76px;margin:0;padding:0 11px;border:0;transform:translateY(8px)}
   .brand{flex:0 0 390px;width:390px;height:57px;gap:14px;background:none;transform:translate(-7px,-3px)}.brand>*{opacity:0}.brand-symbol{width:44px;height:44px;gap:5px}.brand-word{font-size:48px}.brand-caption{font-size:17px;line-height:1.2;padding-left:18px;margin-left:0}
@@ -119,10 +119,11 @@ body{background-color:#3a2016;background-image:radial-gradient(ellipse at 18% -1
   .activity-panel{height:133px;min-height:133px;flex:0 0 133px;padding-top:13px}.activity-panel .section-line{font-size:20px}.activity-list{height:76px;min-height:76px;margin-top:10px}.activity-list li{font-size:16px;line-height:1.6;margin-bottom:5px}.log-dot{width:10px;height:10px;margin-top:8px}
   .restart-button{height:40px;min-height:40px;flex-shrink:0;margin:0;border:0;font-size:17px}.restart-button::before,.restart-button::after{content:"";height:1px;background:#9b7a58;flex:1}.site-footer{display:none}
 
-  .token{width:54px;height:54px;border:0;background:transparent;box-shadow:none;color:#f8dfba;font-size:18px;text-shadow:0 1px #42110c}
+  .token-layer .token.red,.token-layer .token.yellow{width:54px;height:54px;border:0;border-radius:50%;background:transparent;box-shadow:none;color:#f8dfba;font-size:18px;text-shadow:0 1px #42110c}
   .token-face{position:relative;z-index:1;width:48px;height:48px;display:grid;place-items:center;border:2px solid #64261d;border-radius:50%;background:radial-gradient(circle at 32% 22%,#ffe2b477 0 5%,transparent 19%),repeating-linear-gradient(92deg,#4a160f28 0 1px,transparent 1px 5px),radial-gradient(circle at 42% 38%,#cf5945,#a52f25 76%);box-shadow:0 4px 0 #6a251b,0 7px 1px #32130dcc,0 9px 10px #1d0c0766,inset 0 2px 2px #ffd7aa99,inset 0 -3px 4px #5d160f88;border-radius:50%}
   .token.yellow .token-face{border-color:#6f4e19;background:radial-gradient(circle at 32% 22%,#fff3c899 0 5%,transparent 19%),repeating-linear-gradient(88deg,#5d40182b 0 1px,transparent 1px 5px),radial-gradient(circle at 42% 38%,#e0b643,#b98124 76%);box-shadow:0 4px 0 #80591d,0 7px 1px #3a260dcc,0 9px 10px #1d0c0766,inset 0 2px 2px #fff2bd,inset 0 -3px 4px #6e481588;color:#523814;text-shadow:0 1px #efd07b}
-  .token.in-yard{width:64px;height:64px;border:2px solid #6b281f;border-radius:0;background:#c34534;box-shadow:0 4px 5px #28110b55;font-size:18px}.token.yellow.in-yard{border-color:#74551e;background:#d4aa38}.token.in-yard .token-face::before{display:none}
-  .token.stacked{width:39px;height:39px;font-size:12px}.token.stacked .token-face{width:32px;height:32px;border-width:1px;box-shadow:0 3px 0 #6a251b,0 5px 5px #24100866}.token.finished{width:34px;height:34px;font-size:11px}.token.finished .token-face{width:28px;height:28px}
+  /* 基地格已印在底图上，动态层只画圆棋子。离开基地后恢复行进路径坐标。 */
+  .token.in-yard{left:var(--yard-left)!important;top:var(--yard-top)!important}
+  .token-layer .token.stacked{width:39px;height:39px;font-size:12px}.token.stacked .token-face{width:32px;height:32px;border-width:1px;box-shadow:0 3px 0 #6a251b,0 5px 5px #24100866}.token-layer .token.finished{width:34px;height:34px;font-size:11px}.token.finished .token-face{width:28px;height:28px}
   .token.legal::before{inset:-5px;border-width:3px}.token.legal::after{top:-16px}.token.legal:hover,.token.legal:focus-visible{transform:translate(-50%,-50%) scale(1.08)}
 }
