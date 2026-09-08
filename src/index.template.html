@@ -7,7 +7,8 @@
   <meta name="description" content="一场轻松的 Ludo 棋局。与电脑对战，离线也能玩。">
   <title>LUDO · 一掷之间</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='2' y='2' width='28' height='28' rx='8' fill='%23203e34'/%3E%3Ccircle cx='11' cy='11' r='3' fill='%23f8f4e8'/%3E%3Ccircle cx='21' cy='21' r='3' fill='%23f8f4e8'/%3E%3C/svg%3E">
-  <style>/*__STYLES__*/</style>
+  <style>/*__ASSET_VARS__*/
+/*__STYLES__*/</style>
 </head>
 <body>
   <div class="page-shell">
@@ -26,21 +27,21 @@
       <div class="game-layout">
         <section class="board-panel" aria-label="Ludo 棋盘">
           <div class="board-heading"><span class="board-title">经典纸板棋盘 <span>01</span></span><span class="turn-badge" id="turn-badge"><i></i>等待开局</span></div>
-          <div class="board-frame"><div class="board-stage" id="board-stage"><svg id="board-svg" viewBox="0 0 600 600" aria-hidden="true"></svg><div id="token-layer" class="token-layer"></div></div></div>
+          <div class="board-frame"><div class="board-art" aria-hidden="true"></div><div class="board-stage" id="board-stage"><svg id="board-svg" viewBox="0 0 600 600" aria-hidden="true"></svg><div id="token-layer" class="token-layer"></div></div></div>
           <div class="board-footer"><span><span class="legend-star" aria-hidden="true">☆</span>安全格，棋子不会被吃</span><span>四枚棋子到家，即获胜<span class="tiny-arrow" aria-hidden="true">↗</span></span></div>
         </section>
 
         <aside class="game-sidebar" aria-label="对局操作">
           <h2 class="scorecard-title"><span></span>对局记分<span></span></h2>
           <section class="players" aria-label="双方进度">
-            <div class="player-row opponent" id="player-1"><div class="avatar ai-avatar" aria-hidden="true"><svg viewBox="0 0 28 28"><rect x="6" y="8" width="16" height="14" rx="5"/><path d="M14 4v4M3 13v5M25 13v5"/><circle cx="11" cy="14" r="1"/><circle cx="17" cy="14" r="1"/><path d="M11 18h6"/></svg></div><div class="player-label"><strong>电脑对手</strong><span id="opponent-level">中级 · 稳健出招</span></div><div class="player-progress"><div class="progress-dots" id="dots-1"></div><span><b id="finished-1">0</b> / 4 到家</span></div></div>
+            <div class="player-row opponent" id="player-1"><div class="avatar ai-avatar" aria-hidden="true"><svg viewBox="0 0 28 28"><rect x="6" y="8" width="16" height="14" rx="5"/><path d="M14 4v4M3 13v5M25 13v5"/><circle cx="11" cy="14" r="1"/><circle cx="17" cy="14" r="1"/><path d="M11 18h6"/></svg></div><div class="player-label"><strong id="opponent-name">电脑 · 终极</strong><span id="opponent-level">深思熟虑</span></div><div class="player-progress"><div class="progress-dots" id="dots-1"></div><span><b id="finished-1">0</b> / 4 到家</span></div></div>
             <div class="versus-line"><span>1 VS 1</span></div>
-            <div class="player-row human" id="player-0"><div class="avatar human-avatar" aria-hidden="true"><svg viewBox="0 0 28 28"><circle cx="14" cy="10" r="4"/><path d="M6 23v-2a8 8 0 0 1 16 0v2"/></svg></div><div class="player-label"><strong>你</strong><span>红色阵营</span></div><div class="player-progress"><div class="progress-dots" id="dots-0"></div><span><b id="finished-0">0</b> / 4 到家</span></div></div>
+            <div class="player-row human" id="player-0"><div class="avatar human-avatar" aria-hidden="true"><svg viewBox="0 0 28 28"><circle cx="14" cy="10" r="4"/><path d="M6 23v-2a8 8 0 0 1 16 0v2"/></svg></div><div class="player-label"><strong>你 · 红色</strong><span>红色阵营</span></div><div class="player-progress"><div class="progress-dots" id="dots-0"></div><span><b id="finished-0">0</b> / 4 到家</span></div></div>
           </section>
 
           <section class="turn-panel" id="turn-panel" aria-label="当前行动">
             <div class="turn-eyebrow"><span id="turn-owner">准备就绪</span><span id="roll-counter">LET’S PLAY</span><button class="mobile-restart" id="mobile-restart" aria-label="重新开始对局">↻ 重开</button></div>
-            <div class="turn-content"><div class="turn-copy"><h2 id="status-title">来掷第一颗骰子</h2><p id="status-description">选好难度，开启今天的棋局。</p></div><div class="dice" id="dice" role="img" aria-label="尚未掷骰"><div class="dice-dots" id="dice-dots"></div></div></div>
+            <div class="turn-content"><div class="turn-copy"><h2 id="status-title">来掷第一颗骰子</h2><p id="status-description">先手随机 · 离线可玩</p></div><div class="dice" id="dice" role="img" aria-label="尚未掷骰"><div class="dice-dots" id="dice-dots"></div></div></div>
             <button class="roll-button" id="roll-button"><span id="roll-label">开始对局</span><span class="button-arrow" aria-hidden="true">↗</span></button>
             <div class="mobile-moves" aria-label="快捷选择棋子"><button data-move="0" disabled>棋子 1</button><button data-move="1" disabled>棋子 2</button><button data-move="2" disabled>棋子 3</button><button data-move="3" disabled>棋子 4</button></div>
             <p class="turn-footnote" id="turn-footnote">先手随机决定，双方使用同一颗公平骰子。</p>
@@ -50,9 +51,9 @@
             <div class="section-line"><label id="difficulty-label">对手难度</label><span id="difficulty-note">从容入门，或认真较量</span></div>
             <div class="difficulty-options" role="group" aria-labelledby="difficulty-label">
               <button data-difficulty="beginner" class="difficulty-button" aria-pressed="false"><span class="level-bars" aria-hidden="true"><i></i></span>初级</button>
-              <button data-difficulty="medium" class="difficulty-button selected" aria-pressed="true"><span class="level-bars" aria-hidden="true"><i></i><i></i></span>中级</button>
+              <button data-difficulty="medium" class="difficulty-button" aria-pressed="false"><span class="level-bars" aria-hidden="true"><i></i><i></i></span>中级</button>
               <button data-difficulty="advanced" class="difficulty-button" aria-pressed="false" title="推演后续骰点和对手应对"><span class="level-bars" aria-hidden="true"><i></i><i></i><i></i></span>高级</button>
-              <button data-difficulty="ultimate" class="difficulty-button" aria-pressed="false" title="终极 v2：综合完成效率，并推演归家残局"><span class="level-bars" aria-hidden="true"><i></i><i></i><i></i><i></i></span>终极</button>
+              <button data-difficulty="ultimate" class="difficulty-button selected" aria-pressed="true" title="终极 v2：综合完成效率，并推演归家残局"><span class="level-bars" aria-hidden="true"><i></i><i></i><i></i><i></i></span>终极</button>
             </div>
           </section>
 

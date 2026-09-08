@@ -19,7 +19,7 @@
   const logEntries = [];
   const timers = new Set();
   let state = E.createGame(0);
-  let difficulty = "medium";
+  let difficulty = "ultimate";
   let started = false;
   let busy = false;
   let generation = 0;
@@ -41,6 +41,8 @@
   let viewingUpdates = window.location.hash === "#updates";
   let resultAnnounced = false;
   let bonusReason = null;
+  let bodyClassFrame = 0;
+  let lobbyRenderFrame = 0;
 
   function cancelAI() {
     aiEpoch++;
@@ -99,7 +101,7 @@
   function setSoundIcon() {
     $("sound-button").innerHTML = soundEnabled
       ? '<svg viewBox="0 0 20 20" aria-hidden="true"><path d="M8 4 4 7H1v6h3l4 3zM12 6a6 6 0 0 1 0 8M15 3a10 10 0 0 1 0 14"/></svg>'
-      : '<svg viewBox="0 0 20 20" aria-hidden="true"><path d="M8 4 4 7H1v6h3l4 3zM12 7l6 6M18 7l-6 6"/></svg>';
+      : '<svg viewBox="0 0 20 20" aria-hidden="true"><path d="M8 4 4 7H1v6h3l4 3zM12 7a6 6 0 0 1 0 6M15 4a9 9 0 0 1 0 12"/></svg>';
     const label = soundEnabled ? "关闭音效" : "开启音效";
     $("sound-button").setAttribute("aria-label", label);
     $("sound-button").setAttribute("aria-pressed", String(soundEnabled));
@@ -132,7 +134,7 @@
       }));
     });
     const startColors = { 0: "#cc4835", 13: "#6f9c57", 26: "#d8b43b", 39: "#4d91a9" };
-    const arrowDirections = { 1: "up", 14: "right", 27: "down", 40: "left" };
+    const arrowDirections = { 1: "up", 14: "left", 27: "down", 40: "right" };
     E.RING.forEach((cell, index) => {
       const x = cell.col * 40, y = cell.row * 40;
       const isSafe = E.SAFE_INDICES.includes(index);
@@ -159,7 +161,7 @@
     svg += '<path d="M240 240 300 300 240 360Z" fill="#6f9c57"/><path d="M240 240 360 240 300 300Z" fill="#d8b43b"/><path d="M360 240 360 360 300 300Z" fill="#4d91a9"/><path d="M240 360 300 300 360 360Z" fill="#cc4835"/>';
     svg += '<path d="M240 240h120v120H240Z" fill="none" stroke="#2b2b26" stroke-width="3"/><path d="M240 240 360 360M360 240 240 360" stroke="#333029" stroke-width="1.5"/>';
     svg += '<g fill="#2f2a22" font-size="11" font-weight="700" font-family="Georgia,serif" letter-spacing=".5"><text x="300" y="266" text-anchor="middle">HOME</text><text x="300" y="343" text-anchor="middle">HOME</text><text x="265" y="304" text-anchor="middle" transform="rotate(90 265 300)">HOME</text><text x="335" y="304" text-anchor="middle" transform="rotate(-90 335 300)">HOME</text></g>';
-    svg += '<rect width="600" height="600" fill="#5b3f27" opacity=".16" filter="url(#paper-grain)" pointer-events="none"/><path d="M300 0v600" stroke="#67442b" stroke-opacity=".34" stroke-width="2"/><path d="M303 0v600" stroke="#f4e5c2" stroke-opacity=".22"/><rect x="1.5" y="1.5" width="597" height="597" fill="none" stroke="#292019" stroke-width="3"/>';
+    svg += '<rect width="600" height="600" fill="#5b3f27" opacity=".21" filter="url(#paper-grain)" pointer-events="none"/><rect x="4" y="4" width="592" height="592" fill="none" stroke="#5b321f" stroke-opacity=".22" stroke-width="8"/><path d="M300 0v600" stroke="#67442b" stroke-opacity=".38" stroke-width="2"/><path d="M303 0v600" stroke="#f4e5c2" stroke-opacity=".2"/><rect x="1.5" y="1.5" width="597" height="597" fill="none" stroke="#292019" stroke-width="3"/>';
     $("board-svg").innerHTML = svg;
     for (let player = 0; player < 2; player++) {
       for (let token = 0; token < 4; token++) {
@@ -168,7 +170,7 @@
         button.id = `token-${player}-${token}`;
         button.dataset.player = player;
         button.dataset.token = token;
-        button.textContent = token + 1;
+        button.innerHTML = `<span class="token-face">${token + 1}</span>`;
         button.addEventListener("click", () => { if (player === 0) performMove(token, false); });
         tokenButtons[player].push(button);
         $("token-layer").appendChild(button);
@@ -252,7 +254,14 @@
 
   function render() {
     renderTokens(); renderDice();
-    document.body.classList.toggle("playing", started);
+    const playing = started;
+    if (document.body.classList.contains("playing") !== playing) {
+      cancelAnimationFrame(bodyClassFrame);
+      bodyClassFrame = requestAnimationFrame(() => {
+        bodyClassFrame = 0;
+        if (started === playing) document.body.classList.toggle("playing", playing);
+      });
+    }
     const mobileLegal = started && !busy && !viewingUpdates && state.activePlayer === 0 ? E.getLegalActions(state) : [];
     document.querySelectorAll("[data-move]").forEach(button => { button.disabled = !mobileLegal.includes(Number(button.dataset.move)); });
     const visual = motion ? motion.fromState : state;
@@ -261,7 +270,8 @@
       $("finished-" + player).textContent = finished;
       Array.from($("dots-" + player).children).forEach((dot, index) => dot.classList.toggle("done", index < finished));
     }
-    $("opponent-level").textContent = `${levelNames[difficulty]} · ${compatibilityMode ? "兼容模式" : levelDescriptions[difficulty]}`;
+    $("opponent-name").textContent = `电脑 · ${levelNames[difficulty]}`;
+    $("opponent-level").textContent = compatibilityMode ? "兼容模式" : levelDescriptions[difficulty];
     document.querySelectorAll("[data-difficulty]").forEach(button => {
       button.disabled = started;
       const selected = button.dataset.difficulty === difficulty;
@@ -275,7 +285,7 @@
     if (fatalError) {
       title = "暂时无法继续"; description = fatalError; label = "请重新开始"; owner = "棋局已暂停"; badge = "需要重新开始"; footnote = "本次未额外掷骰或改变棋规。";
     } else if (!started) {
-      title = "来掷第一颗骰子"; description = "选好难度，开启今天的棋局。"; label = "开始对局"; owner = "准备就绪"; badge = "等待开局"; footnote = "先手随机决定，双方使用同一颗公平骰子。"; enabled = true;
+       title = "来掷第一颗骰子"; description = "先手随机 · 离线可玩"; label = "开始对局"; owner = "准备就绪"; badge = "等待开局"; footnote = "先手随机决定，双方使用同一颗公平骰子。"; enabled = true;
     } else if (busy) {
       const actor = motion ? motion.player : rollingPlayer ?? state.activePlayer;
       title = activity === "thinking" ? "对手正在思考" : activity === "rolling" ? "骰子转起来了" : "棋子向前一步步";
@@ -324,9 +334,15 @@
     pendingCompletion = null; rollingPlayer = null; resultAnnounced = false; bonusReason = null;
     logEntries.length = 0;
     document.querySelectorAll("dialog[open]").forEach(dialog => dialog.close());
-    log("新棋盘准备好了，选择难度后开始。", null);
-    render();
-    $("roll-button").focus({ preventScroll: true });
+    const currentGeneration = generation;
+    cancelAnimationFrame(lobbyRenderFrame);
+    lobbyRenderFrame = requestAnimationFrame(() => {
+      lobbyRenderFrame = 0;
+      if (generation !== currentGeneration || started) return;
+      log("新棋盘准备好了，选择难度后开始。", null);
+      render();
+      $("roll-button").focus({ preventScroll: true });
+    });
   }
 
   function beginGame() {
@@ -498,8 +514,11 @@
   }));
   $("rules-button").addEventListener("click", () => $("rules-dialog").showModal());
   document.querySelectorAll("[data-move]").forEach(button => button.addEventListener("click", () => performMove(Number(button.dataset.move), false)));
-  $("restart-button").addEventListener("click", () => $("restart-dialog").showModal());
-  $("mobile-restart").addEventListener("click", () => $("restart-dialog").showModal());
+  function requestRestart() {
+    requestAnimationFrame(() => { if (started && !$("restart-dialog").open) $("restart-dialog").showModal(); });
+  }
+  $("restart-button").addEventListener("click", requestRestart);
+  $("mobile-restart").addEventListener("click", requestRestart);
   $("confirm-restart").addEventListener("click", resetToLobby);
   $("play-again").addEventListener("click", resetToLobby);
   document.querySelectorAll("[data-close]").forEach(button => button.addEventListener("click", () => $(button.dataset.close).close()));

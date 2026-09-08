@@ -1,0 +1,571 @@
+{
+  "manifestVersion": 1,
+  "coordinateConvention": "Pillow left-top inclusive, right-bottom exclusive",
+  "targetSource": {
+    "path": "doc/design/ludo-vintage-target.png",
+    "width": 1536,
+    "height": 1024,
+    "sha256": "355b5ce988b468dcf234bcda8123a1f8c155813ab7c317c6231c29a3acb2a308"
+  },
+  "cleanPlateSource": {
+    "path": "~/.codex/generated_images/01a07af3-dc35-7a70-80e2-887e76281450/exec-32303a2b-67de-4b17-8fb5-242187e0fada.png",
+    "width": 1536,
+    "height": 1024,
+    "sha256": "730d5487da4df044882c5a1df69abcb795c7a833e5dac4ef4f02b90c3b9f0957"
+  },
+  "assets": [
+    {
+      "id": "ludo_cleanplate_v1",
+      "file": "ludo-cleanplate-v1.png",
+      "process": "copy",
+      "source": "cleanPlateSource",
+      "sourceBox": {
+        "x": 0,
+        "y": 0,
+        "width": 1536,
+        "height": 1024
+      },
+      "output": {
+        "width": 1536,
+        "height": 1024,
+        "mode": "RGB",
+        "sha256": "730d5487da4df044882c5a1df69abcb795c7a833e5dac4ef4f02b90c3b9f0957"
+      },
+      "purpose": "clean plate：移除红黄棋子和骰子后的 1536x1024 全屏视觉底图，供动态精灵叠加。",
+      "limitations": "页头、面板文字、按钮和状态文案仍为底图内容；交互热区需由前端覆盖。"
+    },
+    {
+      "id": "wood_texture_horizontal",
+      "file": "wood-texture-horizontal.png",
+      "process": "crop",
+      "source": "targetSource",
+      "sourceBox": {
+        "x": 488,
+        "y": 0,
+        "width": 662,
+        "height": 84
+      },
+      "output": {
+        "width": 662,
+        "height": 84,
+        "mode": "RGB",
+        "sha256": "c4a13204ad77394cc1c5da18d3851e03980f59407916f90c34e1108aafef6e2a"
+      },
+      "purpose": "页头下方无文字的横向木桌纹理样本，可用于背景取色和横向纹理拼接。",
+      "limitations": "高度只有 84px；直接纵向拉伸会放大木纹，应优先 repeat 或与纵向样本混合。"
+    },
+    {
+      "id": "wood_texture_vertical",
+      "file": "wood-texture-vertical.png",
+      "process": "crop",
+      "source": "targetSource",
+      "sourceBox": {
+        "x": 0,
+        "y": 86,
+        "width": 72,
+        "height": 874
+      },
+      "output": {
+        "width": 72,
+        "height": 874,
+        "mode": "RGB",
+        "sha256": "ea9e0843dee464febe14cf88a09c430b42c8fcf8155851c9852db211be09d396"
+      },
+      "purpose": "左侧无 UI 的纵向木桌纹理样本，可用于页面长边背景取色。",
+      "limitations": "宽度只有 72px，右缘含棋盘自然投影，适合保留目标图的空间关系。"
+    },
+    {
+      "id": "header_brand",
+      "file": "header-brand.png",
+      "process": "crop",
+      "source": "targetSource",
+      "sourceBox": {
+        "x": 95,
+        "y": 15,
+        "width": 390,
+        "height": 57
+      },
+      "output": {
+        "width": 390,
+        "height": 57,
+        "mode": "RGB",
+        "sha256": "585f8c62d74a5984ff32c34ffb6205e0a66a56b2b3f3cdcaf7ec07d15b4bb2af"
+      },
+      "purpose": "四色圆点、LUDO 字标、竖线与中文副标题的完整页头样本。",
+      "limitations": "文字和木纹底色已烘焙，不适合无损缩放或动态改字。"
+    },
+    {
+      "id": "board_complete",
+      "file": "board-complete.png",
+      "process": "crop",
+      "source": "targetSource",
+      "sourceBox": {
+        "x": 91,
+        "y": 85,
+        "width": 863,
+        "height": 858
+      },
+      "output": {
+        "width": 863,
+        "height": 858,
+        "mode": "RGB",
+        "sha256": "393c70d39070c57dc3c3593b15a291409159e52fe109471c7f37a38a5d450bb2"
+      },
+      "purpose": "带木框、折痕、棋盘格和当前棋子状态的完整棋盘区域。",
+      "limitations": "红黄棋子已烘焙；动态游戏应优先使用 clean plate，再叠加棋子。"
+    },
+    {
+      "id": "right_score_panel",
+      "file": "right-score-panel.png",
+      "process": "crop",
+      "source": "targetSource",
+      "sourceBox": {
+        "x": 968,
+        "y": 85,
+        "width": 474,
+        "height": 882
+      },
+      "output": {
+        "width": 474,
+        "height": 882,
+        "mode": "RGB",
+        "sha256": "4aafccb85c66e79f2e59afbe1d4f9882aee7096592828417b81dc99a036ce341"
+      },
+      "purpose": "右侧完整旧纸记分面板，包括纸张边框、按钮、文字和骰盅。",
+      "limitations": "分数、难度、状态文字与骰子结果已烘焙；适合作为像素对照，不宜直接承担交互。"
+    },
+    {
+      "id": "dice_cup_region",
+      "file": "dice-cup-region.png",
+      "process": "crop",
+      "source": "targetSource",
+      "sourceBox": {
+        "x": 1244,
+        "y": 374,
+        "width": 173,
+        "height": 162
+      },
+      "output": {
+        "width": 173,
+        "height": 162,
+        "mode": "RGB",
+        "sha256": "06dde19d492dfa1926ee9aab96d291adeedf4ce661450a3034636cdd2388544d"
+      },
+      "purpose": "带木框、绿色绒布、阴影和骰子的完整骰盅区域样本。",
+      "limitations": "骰子点数和纸面底色已烘焙。"
+    },
+    {
+      "id": "dice_face_five",
+      "file": "dice-face-five.png",
+      "process": "crop",
+      "source": "targetSource",
+      "sourceBox": {
+        "x": 1293,
+        "y": 426,
+        "width": 71,
+        "height": 74
+      },
+      "output": {
+        "width": 71,
+        "height": 74,
+        "mode": "RGB",
+        "sha256": "27fbd3a8b20f9429ffad1718bed4eeede4ed0e26dcc5f312b5faad05fb656c7b"
+      },
+      "purpose": "五点骰子近景样本，包含圆角、立体高光和投影。",
+      "limitations": "绿色绒布背景和投影已烘焙，不是透明精灵。"
+    },
+    {
+      "id": "red_token_selected",
+      "file": "red-token-selected-sample.png",
+      "process": "crop",
+      "source": "targetSource",
+      "sourceBox": {
+        "x": 205,
+        "y": 656,
+        "width": 72,
+        "height": 77
+      },
+      "output": {
+        "width": 72,
+        "height": 77,
+        "mode": "RGB",
+        "sha256": "201261af14b36e920e9dc8179cb7baa97abd82666f5bec00e8fd0486b4586667"
+      },
+      "purpose": "红色 1 号棋子的选中态样本，含白黑双环和投影。",
+      "limitations": "红色棋盘底色已烘焙，不是透明精灵。"
+    },
+    {
+      "id": "red_token_default",
+      "file": "red-token-default-sample.png",
+      "process": "crop",
+      "source": "targetSource",
+      "sourceBox": {
+        "x": 298,
+        "y": 663,
+        "width": 67,
+        "height": 68
+      },
+      "output": {
+        "width": 67,
+        "height": 68,
+        "mode": "RGB",
+        "sha256": "69417f8b61d5ef406e228dd642fa99cb3efa2286c15452650dbd7b2f9a21fa68"
+      },
+      "purpose": "红色 2 号棋子的普通态样本，含方形底座和投影。",
+      "limitations": "红色棋盘底色与数字 2 已烘焙，不是通用透明棋子。"
+    },
+    {
+      "id": "yellow_token_one",
+      "file": "yellow-token-one-sample.png",
+      "process": "crop",
+      "source": "targetSource",
+      "sourceBox": {
+        "x": 689,
+        "y": 193,
+        "width": 67,
+        "height": 65
+      },
+      "output": {
+        "width": 67,
+        "height": 65,
+        "mode": "RGB",
+        "sha256": "f88f8c4d451ae8037b33baf4ed46b90b25837a03098b489b09e16350f61707ce"
+      },
+      "purpose": "黄色 1 号棋子样本，含方形底座、金属高光和投影。",
+      "limitations": "浅色基地底色与数字 1 已烘焙，不是通用透明棋子。"
+    },
+    {
+      "id": "yellow_token_two",
+      "file": "yellow-token-two-sample.png",
+      "process": "crop",
+      "source": "targetSource",
+      "sourceBox": {
+        "x": 779,
+        "y": 193,
+        "width": 67,
+        "height": 65
+      },
+      "output": {
+        "width": 67,
+        "height": 65,
+        "mode": "RGB",
+        "sha256": "25114d12f80958cbf149827aea1e9ee301f0a23ea08a12880b0c75bcaf2e6765"
+      },
+      "purpose": "黄色 2 号棋子样本，用于核对普通态大小和间距。",
+      "limitations": "浅色基地底色与数字 2 已烘焙，不是通用透明棋子。"
+    },
+    {
+      "id": "board_cleanplate",
+      "file": "board-cleanplate.png",
+      "process": "crop",
+      "source": "cleanPlateSource",
+      "sourceBox": {
+        "x": 91,
+        "y": 85,
+        "width": 863,
+        "height": 858
+      },
+      "output": {
+        "width": 863,
+        "height": 858,
+        "mode": "RGB",
+        "sha256": "18d4d10e1cd6c9e074ab1465b2d2e9d990f267db8dd6e2ac4222b3f223c096d8"
+      },
+      "purpose": "移除所有棋子后的完整棋盘，可作为动态棋子的静态底层。",
+      "limitations": "棋盘中的 HOME、箭头与星形仍为底图内容。"
+    },
+    {
+      "id": "right_score_panel_cleanplate",
+      "file": "right-score-panel-cleanplate.png",
+      "process": "crop",
+      "source": "cleanPlateSource",
+      "sourceBox": {
+        "x": 968,
+        "y": 85,
+        "width": 474,
+        "height": 882
+      },
+      "output": {
+        "width": 474,
+        "height": 882,
+        "mode": "RGB",
+        "sha256": "dd9edccade2207c7e4f150c0db77fd90d274e827ca92f0a12400c2fb44715962"
+      },
+      "purpose": "骰盅为空的右侧纸质面板，可在骰盅上叠加动态骰子。",
+      "limitations": "面板文字、按钮、分数与难度状态仍为底图内容。"
+    },
+    {
+      "id": "dice_cup_empty",
+      "file": "dice-cup-empty.png",
+      "process": "crop",
+      "source": "cleanPlateSource",
+      "sourceBox": {
+        "x": 1244,
+        "y": 374,
+        "width": 173,
+        "height": 162
+      },
+      "output": {
+        "width": 173,
+        "height": 162,
+        "mode": "RGB",
+        "sha256": "83f97f86e76cf0bdb013ce2fa5ff7d96857904ca9fc3b17976de08cd88ec2914"
+      },
+      "purpose": "空骰盅样本，保留木框、绿色绒布、内阴影和纸面环境。",
+      "limitations": "周围纸面底色已烘焙。"
+    },
+    {
+      "id": "red_token_selected_cutout",
+      "file": "red-token-selected-cutout.png",
+      "process": "manual supersampled geometry mask",
+      "source": "targetSource",
+      "sourceBox": {
+        "x": 205,
+        "y": 656,
+        "width": 72,
+        "height": 77
+      },
+      "mask": {
+        "supersample": 4,
+        "shapes": [
+          {
+            "type": "rectangle",
+            "box": [
+              10,
+              8,
+              63,
+              64
+            ],
+            "radius": 0
+          },
+          {
+            "type": "ellipse",
+            "box": [
+              2,
+              2,
+              71,
+              76
+            ],
+            "radius": 0
+          }
+        ]
+      },
+      "output": {
+        "width": 72,
+        "height": 77,
+        "mode": "RGBA",
+        "sha256": "116ce5a568fec385c1f324c96eeb909aaa8ae45418d2597419d4290bde7858f9"
+      },
+      "purpose": "从目标图裁切并按轮廓抠出的红色选中态透明棋子。",
+      "limitations": "透明边缘来自人工几何蒙版，保留圆环和方形底座，正式缩放前需复核暗边。"
+    },
+    {
+      "id": "red_token_default_cutout",
+      "file": "red-token-default-cutout.png",
+      "process": "manual supersampled geometry mask",
+      "source": "targetSource",
+      "sourceBox": {
+        "x": 298,
+        "y": 663,
+        "width": 67,
+        "height": 68
+      },
+      "mask": {
+        "supersample": 4,
+        "shapes": [
+          {
+            "type": "rounded_rectangle",
+            "box": [
+              2,
+              2,
+              66,
+              65
+            ],
+            "radius": 3
+          }
+        ]
+      },
+      "output": {
+        "width": 67,
+        "height": 68,
+        "mode": "RGBA",
+        "sha256": "c296987a3ce1ba6d8ee73f322366f620e5044d6673fd6ed4304f15079237b46b"
+      },
+      "purpose": "从目标图裁切并按轮廓抠出的红色普通态透明棋子。",
+      "limitations": "保留方形底座、投影和数字 2；透明边缘来自人工几何蒙版。"
+    },
+    {
+      "id": "yellow_token_one_cutout",
+      "file": "yellow-token-one-cutout.png",
+      "process": "manual supersampled geometry mask",
+      "source": "targetSource",
+      "sourceBox": {
+        "x": 689,
+        "y": 193,
+        "width": 67,
+        "height": 65
+      },
+      "mask": {
+        "supersample": 4,
+        "shapes": [
+          {
+            "type": "rounded_rectangle",
+            "box": [
+              2,
+              2,
+              66,
+              64
+            ],
+            "radius": 3
+          }
+        ]
+      },
+      "output": {
+        "width": 67,
+        "height": 65,
+        "mode": "RGBA",
+        "sha256": "91cd829889d74780706919df61b121b8da33ff280dc993281740e531d170d8bf"
+      },
+      "purpose": "从目标图裁切并按轮廓抠出的黄色普通态透明棋子。",
+      "limitations": "保留方形底座、投影和数字 1；透明边缘来自人工几何蒙版。"
+    },
+    {
+      "id": "yellow_token_two_cutout",
+      "file": "yellow-token-two-cutout.png",
+      "process": "manual supersampled geometry mask",
+      "source": "targetSource",
+      "sourceBox": {
+        "x": 779,
+        "y": 193,
+        "width": 67,
+        "height": 65
+      },
+      "mask": {
+        "supersample": 4,
+        "shapes": [
+          {
+            "type": "rounded_rectangle",
+            "box": [
+              2,
+              2,
+              66,
+              64
+            ],
+            "radius": 3
+          }
+        ]
+      },
+      "output": {
+        "width": 67,
+        "height": 65,
+        "mode": "RGBA",
+        "sha256": "cf9bfdb26f7d7265f4d71a0a394c8956c780fd8ebdff8d40d09fea70dbb311a8"
+      },
+      "purpose": "从目标图裁切并按轮廓抠出的黄色普通态透明棋子。",
+      "limitations": "保留方形底座、投影和数字 2；透明边缘来自人工几何蒙版。"
+    },
+    {
+      "id": "dice_face_five_cutout",
+      "file": "dice-face-five-cutout.png",
+      "process": "manual supersampled geometry mask",
+      "source": "targetSource",
+      "sourceBox": {
+        "x": 1293,
+        "y": 426,
+        "width": 71,
+        "height": 74
+      },
+      "mask": {
+        "supersample": 4,
+        "shapes": [
+          {
+            "type": "rounded_rectangle",
+            "box": [
+              3,
+              8,
+              68,
+              72
+            ],
+            "radius": 13
+          }
+        ]
+      },
+      "output": {
+        "width": 71,
+        "height": 74,
+        "mode": "RGBA",
+        "sha256": "8a93759c6fc202e803b019e58d63022a26a8958274a04084269860021e317f96"
+      },
+      "purpose": "从目标图裁切并按轮廓抠出的五点骰子透明图。",
+      "limitations": "保留骰子自然投影；透明边缘来自人工几何蒙版，其他点数仍需单独制作。"
+    },
+    {
+      "id": "paper_texture",
+      "file": "paper-texture.png",
+      "process": "2x2 mirrored seamless tile",
+      "source": "targetSource",
+      "sourceBox": {
+        "x": 1090,
+        "y": 650,
+        "width": 320,
+        "height": 32
+      },
+      "output": {
+        "width": 640,
+        "height": 64,
+        "mode": "RGB",
+        "sha256": "377d0c9bea4df906bf8198299c5fcb3be3ffbf405760e35f9912c4cbd6ac25cc"
+      },
+      "tile": {
+        "repeatX": true,
+        "repeatY": true,
+        "oppositeEdgesPixelEqual": true
+      },
+      "purpose": "从右侧面板无文字、无线条的空白区域制作的可平铺旧纸纹理。",
+      "limitations": "采用源区域的 2x2 镜像拼接确保边缘闭合；纹理图案每 640x64px 重复一次。"
+    },
+    {
+      "id": "outer_chrome",
+      "file": "outer-chrome.png",
+      "process": "transparent mask of targetSource",
+      "source": "targetSource",
+      "output": {
+        "width": 1536,
+        "height": 1024,
+        "mode": "RGBA",
+        "sha256": "7c281c9ed9337a4df2c48bef06a5f21c939bbf23d8d9178619cdf5ac8c402527"
+      },
+      "purpose": "保留效果稿原始木桌、页头、导航与棋盘脚注，棋盘和记分板区域透明以叠加交互层。",
+      "limitations": "按 1536x1024 桌面基准制作；其他桌面尺寸使用居中显示。"
+    },
+    {
+      "id": "tabletop_background",
+      "file": "tabletop-background.png",
+      "process": "image generation edit from targetSource",
+      "source": "targetSource",
+      "output": {
+        "width": 1536,
+        "height": 1024,
+        "mode": "RGB",
+        "sha256": "670a6802390832aa8d51c0ea58fe5868d5cdc7033895e6e571d02df3d912edab"
+      },
+      "purpose": "移除全部界面元素后的连续胡桃木桌面底图，避免平铺纹理出现接缝。",
+      "promptSummary": "移除棋盘、面板、文字、棋子和阴影，只保留同材质、同光照的 1536x1024 胡桃木桌面。",
+      "limitations": "生成式补全素材；以效果稿颜色和纹理连续性为视觉验收标准。"
+    },
+    {
+      "id": "tabletop_background_web",
+      "file": "tabletop-background.jpg",
+      "process": "deterministic JPEG derivative of tabletop_background",
+      "source": "tabletop_background",
+      "output": {
+        "width": 1536,
+        "height": 1024,
+        "mode": "RGB",
+        "sha256": "738c6e1c1ed1a72851c987e69a857c4adff9a77213ee21f5c2a46853e5252b7b"
+      },
+      "purpose": "单文件网页内嵌使用的胡桃木桌面压缩版本。",
+      "limitations": "有损压缩质量 91，4:4:4 色度采样。"
+    }
+  ]
+}

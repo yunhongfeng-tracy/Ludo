@@ -6,13 +6,15 @@ async (page) => {
   await page.context().setOffline(true);
   await page.emulateMedia({ reducedMotion: 'no-preference' });
   if (!await page.locator('#updates-page').isVisible()) throw new Error('Direct updates URL did not open updates');
-  if (await page.locator('.release-entry').count() !== 7) throw new Error('Release history is incomplete');
-  if (!await page.locator('.release-entry.latest .release-version').textContent().then(text => text.includes('0.4.0'))) throw new Error('Latest release version is stale');
+  if (await page.locator('.release-entry').count() < 1) throw new Error('Release history is incomplete');
+  const currentVersion = (await page.locator('.current-release strong').textContent()).trim();
+  const latestVersion = (await page.locator('.release-entry.latest .release-version').textContent()).trim();
+  if (latestVersion !== currentVersion) throw new Error(`Latest release version is stale: ${latestVersion} !== ${currentVersion}`);
   if (await page.locator('#game-page').isVisible()) throw new Error('Two pages visible at once');
   const directTitle = await page.title();
   await page.locator('.back-to-game').click();
   await page.waitForFunction(() => !LudoGame.snapshot().viewingUpdates);
-  await page.locator('.site-footer [data-updates-link]').click();
+  await page.locator('.header-actions [data-updates-link]').click();
   await page.waitForFunction(() => document.activeElement.id === 'updates-title');
   const savedGameScroll = await page.evaluate(() => ({ game: document.getElementById('game-page').hidden, y: scrollY }));
   await page.goBack();

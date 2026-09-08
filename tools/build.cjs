@@ -3,6 +3,7 @@ const fs = require("node:fs");
 const path = require("node:path");
 const root = path.resolve(__dirname, "..");
 const read = name => fs.readFileSync(path.join(root, name), "utf8");
+const readBinary = name => fs.readFileSync(path.join(root, name));
 const { strategySources } = require("./ai-product-sources.cjs");
 function build(outputFile = path.join(root, "index.html")) {
 const releaseSource = read("src/releases.json");
@@ -29,6 +30,23 @@ const releasesHtml = history.releases.map((release, index) => {
 }).join("\n");
 let html = read("src/index.template.html");
 html = html.replaceAll("<!--__VERSION__-->", escapeHtml(version)).replace("<!--__RELEASES__-->", () => releasesHtml);
+const visualAssets = {
+  "board-complete": "src/assets/vintage/board-complete.png",
+  "board-cleanplate": "src/assets/vintage/board-cleanplate.png",
+  "right-score-panel": "src/assets/vintage/right-score-panel.png",
+  "outer-chrome": "src/assets/vintage/outer-chrome.png",
+  "paper-texture": "src/assets/vintage/paper-texture.png",
+  "tabletop-background": "src/assets/vintage/tabletop-background.jpg",
+  "dice-cup-empty": "src/assets/vintage/dice-cup-empty.png",
+  "die-five": "src/assets/vintage/dice-face-five-cutout.png"
+};
+const assetVariables = `:root{${Object.entries(visualAssets).map(([id, file]) => {
+  const data = readBinary(file).toString("base64");
+  const mime = path.extname(file).toLowerCase() === ".jpg" ? "image/jpeg" : "image/png";
+  return `--asset-${id}:url("data:${mime};base64,${data}")`;
+}).join(";")}}`;
+if (!html.includes("/*__ASSET_VARS__*/")) throw new Error("缺少构建插槽 ASSET_VARS");
+html = html.replace("/*__ASSET_VARS__*/", () => assetVariables);
 const strategyFiles = strategySources();
 const parts = { STYLES: "src/styles.css", ENGINE: "src/engine.js", AI: strategyFiles.filter(file => file !== "src/engine.js"), AI_CLIENT: "src/ai-client.js", UPDATES: "src/updates.js", APP: "src/app.js",
   WORKER_SOURCE: [...strategyFiles, "src/ai-worker.js"] };
