@@ -46,7 +46,7 @@ const assetVariables = `:root{${Object.entries(visualAssets).map(([id, file]) =>
 if (!html.includes("/*__ASSET_VARS__*/")) throw new Error("缺少构建插槽 ASSET_VARS");
 html = html.replace("/*__ASSET_VARS__*/", () => assetVariables);
 const strategyFiles = strategySources();
-const parts = { STYLES: "src/styles.css", ENGINE: "src/engine.js", AI: strategyFiles.filter(file => file !== "src/engine.js"), AI_CLIENT: "src/ai-client.js", UPDATES: "src/updates.js", APP: "src/app.js",
+const parts = { STYLES: "src/styles.css", ENGINE: "src/engine.js", AI: strategyFiles.filter(file => file !== "src/engine.js"), AI_CLIENT: "src/ai-client.js", UPDATES: "src/updates.js", SOUND: "src/sound.js", APP: "src/app.js",
   WORKER_SOURCE: [...strategyFiles, "src/ai-worker.js"] };
 for (const [key, file] of Object.entries(parts)) {
   const text = Array.isArray(file) ? file.map(read).join("\n") : read(file);

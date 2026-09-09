@@ -27,7 +27,7 @@
       <div class="game-layout">
         <section class="board-panel" aria-label="Ludo 棋盘">
           <div class="board-heading"><span class="board-title">经典纸板棋盘 <span>01</span></span><span class="turn-badge" id="turn-badge"><i></i>等待开局</span></div>
-          <div class="board-frame"><div class="board-art" aria-hidden="true"></div><div class="board-stage" id="board-stage"><svg id="board-svg" viewBox="0 0 600 600" aria-hidden="true"></svg><div id="token-layer" class="token-layer"></div></div></div>
+          <div class="board-frame"><div class="board-art" aria-hidden="true"></div><div class="board-star-repairs" id="board-star-repairs" aria-hidden="true"></div><div class="board-stage" id="board-stage"><svg id="board-svg" viewBox="0 0 600 600" aria-hidden="true"></svg><svg class="board-safety" id="board-safety" viewBox="0 0 600 600" aria-hidden="true"></svg><div id="token-layer" class="token-layer"></div></div></div>
           <div class="board-footer"><span><span class="legend-star" aria-hidden="true">☆</span>安全格，棋子不会被吃</span><span>四枚棋子到家，即获胜<span class="tiny-arrow" aria-hidden="true">↗</span></span></div>
         </section>
 
@@ -86,6 +86,7 @@
   <script type="text/plain" id="ai-worker-source">/*__WORKER_SOURCE__*/</script>
   <script>/*__AI_CLIENT__*/</script>
   <script>/*__UPDATES__*/</script>
+  <script>/*__SOUND__*/</script>
   <script>/*__APP__*/</script>
 </body>
 </html>

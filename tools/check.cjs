@@ -5,11 +5,11 @@ const cp = require("node:child_process");
 const root = path.resolve(__dirname, "..");
 const { strategySources } = require("./ai-product-sources.cjs");
 const strategyFiles = strategySources();
-for (const name of [...strategyFiles, "src/ai-worker.js", "src/ai-client.js", "src/app.js", "src/updates.js", "tools/ai-product-sources.cjs", "tools/ai-benchmark.cjs", "tools/build.cjs", "tools/check.cjs", "tools/serve.cjs", "tools/verify-public.cjs"]) {
+for (const name of [...strategyFiles, "src/ai-worker.js", "src/ai-client.js", "src/app.js", "src/sound.js", "src/updates.js", "tools/ai-product-sources.cjs", "tools/ai-benchmark.cjs", "tools/build.cjs", "tools/check.cjs", "tools/serve.cjs", "tools/verify-public.cjs"]) {
   const result = cp.spawnSync(process.execPath, ["--check", path.join(root, name)], { encoding: "utf8" });
   if (result.status !== 0) throw new Error(result.stderr || `语法检查失败：${name}`);
 }
-for (const name of [...strategyFiles, "index.html", "src/index.template.html", "src/styles.css", "src/app.js", "src/ai-worker.js", "src/ai-client.js", "src/updates.js", "src/releases.json", "package.json", "tools/ai-product-sources.cjs", "tools/ai-benchmark.cjs", "tools/build.cjs", "tools/check.cjs"]) {
+for (const name of [...strategyFiles, "index.html", "src/index.template.html", "src/styles.css", "src/app.js", "src/sound.js", "src/ai-worker.js", "src/ai-client.js", "src/updates.js", "src/releases.json", "package.json", "tools/ai-product-sources.cjs", "tools/ai-benchmark.cjs", "tools/build.cjs", "tools/check.cjs"]) {
   const bytes = fs.readFileSync(path.join(root, name));
   const text = new TextDecoder("utf-8", { fatal: true }).decode(bytes);
   if (text.includes("\uFFFD")) throw new Error(`编码检查失败：${name}`);

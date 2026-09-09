@@ -35,8 +35,14 @@
   let motion = null;
   let activity = "idle";
   let decisionRng = AI.createSeededRng(1);
-  let soundEnabled = false;
-  let audioContext = null;
+  const soundPreferenceKey = "ludo.sound.enabled";
+  let soundEnabled = true;
+  try { soundEnabled = localStorage.getItem(soundPreferenceKey) !== "false"; } catch { /* 本地文件或隐私模式仍可使用本次开关。 */ }
+  const sound = window.LudoSound.create();
+  sound.setEnabled(soundEnabled);
+  let soundRequest = 0;
+  let soundUnlocking = null;
+  let soundWarningShown = false;
   let lastDecision = null;
   let fatalError = null;
   let pendingCompletion = null;
@@ -85,28 +91,43 @@
     if (complete) complete();
   }
 
-  function tone(kind) {
-    if (!soundEnabled || !audioContext) return;
-    const notes = kind === "win" ? [392, 494, 587, 784] : kind === "capture" ? [440, 294] : kind === "finish" ? [523, 659] : [330];
-    const time = audioContext.currentTime;
-    notes.forEach((frequency, index) => {
-      const oscillator = audioContext.createOscillator();
-      const gain = audioContext.createGain();
-      oscillator.type = "sine";
-      oscillator.frequency.value = frequency;
-      gain.gain.setValueAtTime(0, time + index * 0.09);
-      gain.gain.linearRampToValueAtTime(0.055, time + index * 0.09 + 0.015);
-      gain.gain.exponentialRampToValueAtTime(0.001, time + index * 0.09 + 0.15);
-      oscillator.connect(gain); gain.connect(audioContext.destination);
-      oscillator.start(time + index * 0.09); oscillator.stop(time + index * 0.09 + 0.18);
-      oscillator.onended = () => { oscillator.disconnect(); gain.disconnect(); };
+  function canPlaySound() {
+    return soundEnabled && !document.hidden && !viewingUpdates && !$("restart-dialog").open && !$("rules-dialog").open;
+  }
+
+  function tone(kind, options) {
+    if (!canPlaySound()) return;
+    if (sound.isReady()) { sound.play(kind, options); return; }
+    if (kind !== "roll" || !soundUnlocking) return;
+    const currentGeneration = generation, currentRevision = revision, request = soundRequest;
+    const endsAt = performance.now() + (options?.duration || 0) * 1000;
+    // 设备恢复晚于点击时，只补当前仍在摇动的骰子，不补播过期动作。
+    void soundUnlocking.then(ready => {
+      const remaining = (endsAt - performance.now()) / 1000;
+      if (ready && canPlaySound() && request === soundRequest && generation === currentGeneration &&
+          revision === currentRevision && activity === "rolling" && remaining > 0) sound.play("roll", { duration: remaining });
     });
+  }
+
+  function unlockSound(preview = false) {
+    if (!soundEnabled) return;
+    const request = ++soundRequest;
+    // 必须在用户手势中解锁；音频失败或等待不会阻塞开始游戏与真实骰点。
+    const unlocking = sound.unlock();
+    soundUnlocking = unlocking;
+    void unlocking.then(ready => {
+      if (request !== soundRequest || !soundEnabled) return;
+      if (!ready) {
+        soundEnabled = false; sound.setEnabled(false); setSoundIcon();
+        if (!soundWarningShown) { soundWarningShown = true; log("当前浏览器暂时无法播放音效，仍可正常游戏。", null); }
+      } else if (preview) tone("step");
+    }).finally(() => { if (soundUnlocking === unlocking) soundUnlocking = null; });
   }
 
   function setSoundIcon() {
     $("sound-button").innerHTML = soundEnabled
       ? '<svg viewBox="0 0 20 20" aria-hidden="true"><path d="M8 4 4 7H1v6h3l4 3zM12 6a6 6 0 0 1 0 8M15 3a10 10 0 0 1 0 14"/></svg>'
-      : '<svg viewBox="0 0 20 20" aria-hidden="true"><path d="M8 4 4 7H1v6h3l4 3zM12 7a6 6 0 0 1 0 6M15 4a9 9 0 0 1 0 12"/></svg>';
+      : '<svg viewBox="0 0 20 20" aria-hidden="true"><path d="M8 4 4 7H1v6h3l4 3zM12 7l6 6M18 7l-6 6"/></svg>';
     const label = soundEnabled ? "关闭音效" : "开启音效";
     $("sound-button").setAttribute("aria-label", label);
     $("sound-button").setAttribute("aria-pressed", String(soundEnabled));
@@ -145,7 +166,7 @@
       const isSafe = E.SAFE_INDICES.includes(index);
       const fill = startColors[index] || "#eadbb8";
       svg += `<rect x="${x}" y="${y}" width="40" height="40" fill="${fill}" stroke="#2d302b" stroke-width="1.7"/>`;
-      if (isSafe) svg += star(x + 20, y + 20, 11, index in startColors ? "#eadbb8" : "none", "#335f58");
+      if (isSafe) svg += `<g data-safe-cell="${cell.cellId}">${star(x + 20, y + 20, 11, index in startColors ? "#eadbb8" : "none", "#335f58")}</g>`;
       if (arrowDirections[index]) {
         const direction = arrowDirections[index];
         const path = direction === "up" ? `M${x + 20} ${y + 30}V${y + 10}M${x + 12} ${y + 18}l8-8 8 8`
@@ -168,6 +189,22 @@
     svg += '<g fill="#2f2a22" font-size="11" font-weight="700" font-family="Georgia,serif" letter-spacing=".5"><text x="300" y="266" text-anchor="middle">HOME</text><text x="300" y="343" text-anchor="middle">HOME</text><text x="265" y="304" text-anchor="middle" transform="rotate(90 265 300)">HOME</text><text x="335" y="304" text-anchor="middle" transform="rotate(-90 335 300)">HOME</text></g>';
     svg += '<rect width="600" height="600" fill="#5b3f27" opacity=".21" filter="url(#paper-grain)" pointer-events="none"/><rect x="4" y="4" width="592" height="592" fill="none" stroke="#5b321f" stroke-opacity=".22" stroke-width="8"/><path d="M300 0v600" stroke="#67442b" stroke-opacity=".38" stroke-width="2"/><path d="M303 0v600" stroke="#f4e5c2" stroke-opacity=".2"/><rect x="1.5" y="1.5" width="597" height="597" fill="none" stroke="#292019" stroke-width="3"/>';
     $("board-svg").innerHTML = svg;
+    // 底图的四颗装饰星位置不符合规则，以同图邻近空白纸纹覆盖；不改动格线和箭头。
+    // 坐标只描述 863×858 美术资产，实际安全格位置始终来自引擎，与棋子共用网格。
+    const vintageStarRepairs = [
+      { x: 221, y: 473, sampleX: 274, sampleY: 473 },
+      { x: 383, y: 262, sampleX: 383, sampleY: 314 },
+      { x: 650, y: 368, sampleX: 703, sampleY: 368 },
+      { x: 490, y: 577, sampleX: 490, sampleY: 525 }
+    ];
+    $("board-star-repairs").innerHTML = vintageStarRepairs.map(({ x, y, sampleX, sampleY }) =>
+      `<span class="board-star-repair" style="left:${x - 22}px;top:${y - 22}px;background-position:${22 - sampleX}px ${22 - sampleY}px"></span>`
+    ).join("");
+    $("board-safety").innerHTML = E.SAFE_INDICES.map(index => {
+      const cell = E.RING[index];
+      const fill = index in startColors ? "#eadbb8" : (cell.col > 7 ? "#b9c7bd" : "#b8c59b");
+      return `<g data-safe-cell="${cell.cellId}">${star(cell.col * 40 + 20, cell.row * 40 + 20, 11, fill, "#3f5952")}</g>`;
+    }).join("");
     for (let player = 0; player < 2; player++) {
       for (let token = 0; token < 4; token++) {
         const button = document.createElement("button");
@@ -179,7 +216,7 @@
         button.style.setProperty("--yard-left", `${(yardX - 36) / 800 * 100}%`);
         button.style.setProperty("--yard-top", `${(yardY - 25) / 800 * 100}%`);
         button.innerHTML = `<span class="token-face">${token + 1}</span>`;
-        button.addEventListener("click", () => { if (player === 0) performMove(token, false); });
+        button.addEventListener("click", () => { if (player === 0) { unlockSound(); performMove(token, false); } });
         tokenButtons[player].push(button);
         $("token-layer").appendChild(button);
       }
@@ -328,6 +365,7 @@
   }
 
   function fail(error) {
+    sound.stop();
     cancelAI();
     console.error(error);
     fatalError = error instanceof Error ? error.message : String(error);
@@ -337,6 +375,7 @@
   }
 
   function resetToLobby() {
+    soundRequest++; sound.stop();
     cancelAI(); compatibilityMode = false;
     generation++; revision++; clearScheduled();
     state = E.createGame(0); started = false; busy = false; lastDie = null; motion = null;
@@ -448,9 +487,10 @@
         else log(`${names[player]}掷出 ${die} 点。`, player);
         render(); scheduleAI();
       };
-      render(); tone("roll");
+      render();
       // 骰点只生成一次，等骰子的实际动画结束再公布；重开导致的取消由 generation 拦截。
       const animation = $("dice").getAnimations().find(item => item.animationName === "dice-roll");
+      tone("roll", { duration: animation ? animation.effect.getComputedTiming().activeDuration / 1000 : 0 });
       if (animation) await animation.finished.catch(() => {});
       if (generation !== currentGeneration) return;
       completePending();
@@ -488,6 +528,7 @@
         await delay(110);
         if (generation !== currentGeneration) return;
         motion.progress = progress; renderTokens();
+        if (!reducedMotion.matches || progress === to) tone("step");
       }
       await delay(120);
       if (generation !== currentGeneration) return;
@@ -513,6 +554,7 @@
 
   $("roll-button").addEventListener("click", () => {
     if (viewingUpdates) return;
+    unlockSound();
     if (!started) beginGame();
     else if (state.phase === "finished") resetToLobby();
     else performRoll(false);
@@ -522,9 +564,10 @@
     difficulty = button.dataset.difficulty;
     render();
   }));
-  $("rules-button").addEventListener("click", () => $("rules-dialog").showModal());
-  document.querySelectorAll("[data-move]").forEach(button => button.addEventListener("click", () => performMove(Number(button.dataset.move), false)));
+  $("rules-button").addEventListener("click", () => { sound.stop(); $("rules-dialog").showModal(); });
+  document.querySelectorAll("[data-move]").forEach(button => button.addEventListener("click", () => { unlockSound(); performMove(Number(button.dataset.move), false); }));
   function requestRestart() {
+    sound.stop();
     requestAnimationFrame(() => { if (started && !$("restart-dialog").open) $("restart-dialog").showModal(); });
   }
   $("restart-button").addEventListener("click", requestRestart);
@@ -532,21 +575,17 @@
   $("confirm-restart").addEventListener("click", resetToLobby);
   $("play-again").addEventListener("click", resetToLobby);
   document.querySelectorAll("[data-close]").forEach(button => button.addEventListener("click", () => $(button.dataset.close).close()));
-  $("sound-button").addEventListener("click", async () => {
+  $("sound-button").addEventListener("click", () => {
+    soundRequest++;
     soundEnabled = !soundEnabled;
-    if (soundEnabled) {
-      try {
-        const Audio = window.AudioContext || window.webkitAudioContext;
-        if (!Audio) throw new Error("音效不可用");
-        if (!audioContext) audioContext = new Audio();
-        await audioContext.resume();
-        tone("roll");
-      } catch { soundEnabled = false; log("当前浏览器不支持音效，仍可正常游戏。", null); }
-    }
+    sound.setEnabled(soundEnabled);
+    try { localStorage.setItem(soundPreferenceKey, String(soundEnabled)); } catch { /* 存储失败不影响本次静音。 */ }
     setSoundIcon();
+    if (soundEnabled) unlockSound(true);
   });
   document.addEventListener("visibilitychange", () => {
     clearScheduled();
+    if (document.hidden) { soundRequest++; sound.stop(); }
     if (document.hidden && activity === "thinking") { cancelAI(); render(); }
     if (!document.hidden && !busy) scheduleAI();
   });
@@ -554,6 +593,7 @@
     viewingUpdates = event.detail.updates;
     clearScheduled();
     if (viewingUpdates) {
+      soundRequest++; sound.stop();
       // 保留已经提交的骰点与走法，让动画链恰好收尾一次，只取消下一步与未完成的搜索。
       cancelAI();
       document.querySelectorAll("dialog[open]").forEach(dialog => dialog.close());
@@ -565,6 +605,7 @@
     }
   });
   window.addEventListener("pagehide", () => {
+    soundRequest++; sound.stop();
     // 已提交的骰子与走法保留，只中断展示，返回页面后恰好收尾一次。
     cancelAI(); generation++; clearScheduled();
     busy = false; motion = null; activity = "idle"; rollingPlayer = null;

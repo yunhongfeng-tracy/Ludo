@@ -11,6 +11,7 @@ async (page) => {
   if (capabilities.random !== 'function') throw new Error('Dice RNG unavailable over HTTP');
   await page.locator('#rules-button').click();
   await page.locator('[data-close="rules-dialog"]').last().click();
+  if (await page.locator('#sound-button').getAttribute('aria-pressed') === 'true') await page.locator('#sound-button').click();
   await page.locator('#sound-button').click();
   if (await page.locator('#sound-button').getAttribute('aria-pressed') !== 'true') throw new Error('Audio initialization failed');
   await page.locator('#sound-button').click();
