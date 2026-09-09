@@ -33,6 +33,8 @@
   let captureCount = 0;
   let lastDie = null;
   let motion = null;
+  let lastMove = null;
+  let capturePresentation = null;
   let activity = "idle";
   let decisionRng = AI.createSeededRng(1);
   const soundPreferenceKey = "ludo.sound.enabled";
@@ -224,11 +226,96 @@
     }
   }
 
-  function describePosition(progress) {
+  function pieceName(player, token) {
+    return `${player ? "黄" : "红"}${token + 1}`;
+  }
+
+  function describePosition(player, progress) {
     if (progress === -1) return "在基地";
     if (progress === E.FINISH) return "已到家";
     if (progress > 50) return `归家通道，距终点 ${E.FINISH - progress} 步`;
-    return `场内第 ${progress + 1} 格`;
+    return `场内第 ${progress + 1} 格${E.isSafeCell(E.position(player, progress).cellId) ? "，安全格保护" : ""}`;
+  }
+
+  function describeMove(before, after, token) {
+    const player = before.activePlayer, opponent = 1 - player;
+    const from = before.tokenProgress[player][token], to = after.tokenProgress[player][token];
+    const fromCell = E.position(player, from), toCell = E.position(player, to);
+    const captured = [], coexisting = [];
+    before.tokenProgress[opponent].forEach((progress, enemy) => {
+      if (progress >= 0 && after.tokenProgress[opponent][enemy] === -1) captured.push({ player: opponent, token: enemy, progress });
+    });
+    const safe = toCell.zone === "ring" && E.isSafeCell(toCell.cellId);
+    if (safe) after.tokenProgress[opponent].forEach((progress, enemy) => {
+      if (progress >= 0 && E.position(opponent, progress).cellId === toCell.cellId) coexisting.push({ player: opponent, token: enemy, progress });
+    });
+    const piece = pieceName(player, token);
+    let kind = "move", message = from === -1 ? `${piece}出营，停在起点安全格。` : `${piece}前进 ${before.pendingDie} 格。`;
+    if (captured.length) {
+      kind = "capture";
+      message = `${piece}吃掉${captured.map(item => pieceName(item.player, item.token)).join("、")}，被吃棋子回营。`;
+    } else if (to === E.FINISH) {
+      kind = "finish"; message = `${piece}到家了！`;
+    } else if (coexisting.length) {
+      kind = "safe";
+      message = `${piece}受安全格保护，与${coexisting.map(item => pieceName(item.player, item.token)).join("、")}共存，不吃子。`;
+    } else if (safe) {
+      kind = "safe";
+      if (from !== -1) message = `${piece}前进 ${before.pendingDie} 格，停在安全格。`;
+    }
+    if (after.phase !== "finished" && (captured.length || to === E.FINISH)) message += " 可再掷一次。";
+    return { player, token, from, to, fromCell, toCell, captured, coexisting, kind, message };
+  }
+
+  function renderMoveFeedback() {
+    const feedback = $("move-feedback"), layer = $("last-move-layer");
+    feedback.dataset.kind = lastMove ? lastMove.kind : "ready";
+    feedback.textContent = lastMove ? lastMove.message : started ? "等待第一步走棋。" : "棋盘已备好，点击开始对局。";
+    if (!lastMove) { layer.replaceChildren(); return; }
+    const mark = (cell, name) => cell.zone === "yard" ? "" :
+      `<rect class="${name}" data-cell-id="${cell.cellId}" x="${cell.col * 40 + 3}" y="${cell.row * 40 + 3}" width="34" height="34" rx="5"/>`;
+    layer.innerHTML = `<g class="last-move-mark ${lastMove.player ? 'yellow' : 'red'}" data-player="${lastMove.player}" data-token="${lastMove.token}" data-cell-id="${lastMove.toCell.cellId}">${mark(lastMove.fromCell, "move-origin")}${mark(lastMove.toCell, "move-destination")}</g>`;
+  }
+
+  function clearCapturePresentation() {
+    const presentation = capturePresentation;
+    capturePresentation = null;
+    if (!presentation) return;
+    presentation.animations.forEach(animation => animation.cancel());
+    presentation.ghosts.forEach(ghost => ghost.remove());
+  }
+
+  async function animateCapturedTokens(captured) {
+    if (!captured.length || reducedMotion.matches || document.hidden || viewingUpdates) return;
+    const presentation = { captured, animations: [], ghosts: [] };
+    capturePresentation = presentation;
+    activity = "capturing";
+    try {
+      captured.forEach(({ player, token }) => {
+        const source = tokenButtons[player][token], style = getComputedStyle(source);
+        const ghost = source.cloneNode(true);
+        ghost.removeAttribute("id"); ghost.removeAttribute("aria-label"); ghost.removeAttribute("title");
+        ghost.setAttribute("aria-hidden", "true"); ghost.tabIndex = -1;
+        ghost.classList.remove("legal", "moving", "last-moved", "in-yard", "capture-hidden");
+        ghost.classList.add("capture-ghost");
+        ghost.style.width = style.width; ghost.style.height = style.height;
+        $("capture-layer").appendChild(ghost); presentation.ghosts.push(ghost);
+        const yard = yardCells[player][token];
+        const vintage = window.matchMedia("(min-width:1200px)").matches;
+        const left = vintage ? style.getPropertyValue("--yard-left").trim() : `${(yard.col + 0.5) / 15 * 100}%`;
+        const top = vintage ? style.getPropertyValue("--yard-top").trim() : `${(yard.row + 0.5) / 15 * 100}%`;
+        const animation = ghost.animate([
+          { left: source.style.left, top: source.style.top, opacity: 1, transform: "translate(-50%,-50%) scale(1)", offset: 0 },
+          { left: source.style.left, top: source.style.top, opacity: 1, transform: "translate(-50%,-50%) scale(1.12)", offset: 0.18 },
+          { left, top, opacity: 1, transform: "translate(-50%,-50%) scale(1)", offset: 0.9 },
+          { left, top, opacity: 0, transform: "translate(-50%,-50%) scale(1)", offset: 1 }
+        ], { duration: 560, easing: "ease-in-out", fill: "forwards" });
+        presentation.animations.push(animation);
+      });
+      render();
+      await Promise.all(presentation.animations.map(animation => animation.finished.catch(() => {})));
+    } catch { /* 动画能力不可用时仍正常完成真实吃子结算。 */ }
+    finally { if (capturePresentation === presentation) clearCapturePresentation(); }
   }
 
   function renderTokens() {
@@ -238,7 +325,9 @@
     for (let player = 0; player < 2; player++) {
       for (let token = 0; token < 4; token++) {
         const isMoving = motion && motion.player === player && motion.token === token;
-        const progress = isMoving ? motion.progress : visual.tokenProgress[player][token];
+        // 回营副本负责飞行动画；真实棋子提前隐藏在基地，避免副本消失后再飞一次。
+        const isCaptured = capturePresentation?.captured.some(item => item.player === player && item.token === token);
+        const progress = isCaptured ? state.tokenProgress[player][token] : isMoving ? motion.progress : visual.tokenProgress[player][token];
         const position = E.position(player, progress);
         const cell = progress === -1 ? yardCells[player][token] : position;
         const key = progress === -1 ? `yard-${player}-${token}` : position.cellId;
@@ -262,12 +351,14 @@
       }
       const button = tokenButtons[entry.player][entry.token];
       const playable = entry.player === 0 && legal.includes(entry.token);
+      const captured = capturePresentation?.captured.some(item => item.player === entry.player && item.token === entry.token);
+      const movedLast = lastMove && lastMove.player === entry.player && lastMove.token === entry.token;
       button.style.left = `${(entry.cell.col + 0.5 + dx) / 15 * 100}%`;
       button.style.top = `${(entry.cell.row + 0.5 + dy) / 15 * 100}%`;
-      button.className = `token ${entry.player ? "yellow" : "red"}${entry.progress === -1 ? " in-yard" : ""}${count > 1 ? " stacked" : ""}${entry.progress === E.FINISH ? " finished" : ""}${entry.isMoving ? " moving" : ""}${playable ? " legal" : ""}`;
+      button.className = `token ${entry.player ? "yellow" : "red"}${entry.progress === -1 ? " in-yard" : ""}${count > 1 ? " stacked" : ""}${entry.progress === E.FINISH ? " finished" : ""}${entry.isMoving ? " moving" : ""}${playable ? " legal" : ""}${movedLast ? " last-moved" : ""}${captured ? " capture-hidden" : ""}`;
       button.disabled = !playable;
-      button.setAttribute("aria-label", `${names[entry.player]}的${entry.token + 1}号棋子，${describePosition(entry.progress)}${playable ? "，可以移动" : ""}`);
-      button.title = `${names[entry.player]}的 ${entry.token + 1} 号棋子 · ${describePosition(entry.progress)}`;
+      button.setAttribute("aria-label", `${names[entry.player]}的${entry.token + 1}号棋子，${describePosition(entry.player, entry.progress)}${movedLast ? "，上一步移动的棋子" : ""}${playable ? "，可以移动" : ""}`);
+      button.title = `${pieceName(entry.player, entry.token)} · ${describePosition(entry.player, entry.progress)}${movedLast ? " · 上一步" : ""}`;
     });
   }
 
@@ -298,7 +389,7 @@
   }
 
   function render() {
-    renderTokens(); renderDice();
+    renderTokens(); renderDice(); renderMoveFeedback();
     const playing = started;
     if (document.body.classList.contains("playing") !== playing) {
       cancelAnimationFrame(bodyClassFrame);
@@ -336,6 +427,7 @@
       title = activity === "thinking" ? "对手正在思考" : activity === "rolling" ? "骰子转起来了" : "棋子向前一步步";
       description = activity === "thinking" ? "正在推演后续局面，寻找更好的走法。" : activity === "rolling" ? "好运气，也需要一点耐心。" : "走过每一格，离终点再近一点。";
       label = activity === "thinking" ? "等待电脑行动" : activity === "rolling" ? "正在掷骰…" : "正在移动…";
+      if (activity === "capturing") { title = "吃子，送回基地"; description = "被吃的棋子回营，本步可再掷一次。"; label = "正在回营…"; }
       owner = `${names[actor]}的回合`; badge = label; footnote = "落在星标安全格，可以暂避锋芒。";
     } else if (state.phase === "finished") {
       title = state.winner === 0 ? "这局，你赢了！" : "好棋，下局再来";
@@ -365,6 +457,7 @@
   }
 
   function fail(error) {
+    clearCapturePresentation();
     sound.stop();
     cancelAI();
     console.error(error);
@@ -375,6 +468,7 @@
   }
 
   function resetToLobby() {
+    clearCapturePresentation(); lastMove = null;
     soundRequest++; sound.stop();
     cancelAI(); compatibilityMode = false;
     generation++; revision++; clearScheduled();
@@ -401,7 +495,7 @@
       generation++; revision++;
       state = E.createGame(secureInt(2));
       decisionRng = AI.createSeededRng(secureInt(0x100000000));
-      started = true; rollCount = 0; captureCount = 0; fatalError = null; lastDie = null; resultAnnounced = false; bonusReason = null;
+      started = true; rollCount = 0; captureCount = 0; fatalError = null; lastDie = null; resultAnnounced = false; bonusReason = null; lastMove = null;
       log(`棋局开始，${names[state.activePlayer]}先手。`, state.activePlayer);
       render(); scheduleAI();
     } catch (error) { fail(error); }
@@ -508,17 +602,18 @@
       busy = true; activity = "moving";
       state = E.applyAction(before, token); revision++;
       const to = state.tokenProgress[player][token];
-      const captured = before.tokenProgress[1 - player].filter((progress, index) => progress >= 0 && state.tokenProgress[1 - player][index] === -1).length;
+      const move = describeMove(before, state, token);
+      const captured = move.captured.length;
+      let captureSoundPlayed = false;
       motion = { fromState: before, player, token, progress: from };
       pendingCompletion = () => {
+        clearCapturePresentation(); lastMove = move;
         motion = null; busy = false; activity = "idle";
-        let message = from === -1 ? `${names[player]}的 ${token + 1} 号棋子出营。` : `${names[player]}的 ${token + 1} 号棋子前进 ${before.pendingDie} 格。`;
-        if (captured) { message = `${names[player]}吃掉了 ${captured} 枚对方棋子。`; captureCount++; tone("capture"); }
-        else if (to === E.FINISH) { message = `${names[player]}的 ${token + 1} 号棋子到家了！`; tone("finish"); }
+        if (captured) { captureCount++; if (!captureSoundPlayed) tone("capture"); }
+        else if (to === E.FINISH) tone("finish");
         bonusReason = state.phase !== "finished" && state.activePlayer === player
           ? (captured ? "吃掉对方棋子" : to === E.FINISH ? "棋子到达 HOME 终点" : "掷出 6") : null;
-        if (bonusReason && (captured || to === E.FINISH)) message += " 获得一次额外掷骰机会。";
-        log(message, player); render();
+        log(move.message, player); render();
         if (state.phase === "finished") showResult();
         else scheduleAI();
       };
@@ -532,6 +627,11 @@
       }
       await delay(120);
       if (generation !== currentGeneration) return;
+      if (captured) {
+        tone("capture"); captureSoundPlayed = true;
+        await animateCapturedTokens(move.captured);
+        if (generation !== currentGeneration) return;
+      }
       completePending();
     } catch (error) { if (generation === currentGeneration) fail(error); }
   }
@@ -585,7 +685,10 @@
   });
   document.addEventListener("visibilitychange", () => {
     clearScheduled();
-    if (document.hidden) { soundRequest++; sound.stop(); }
+    if (document.hidden) {
+      soundRequest++; sound.stop();
+      if (activity === "capturing") { clearCapturePresentation(); completePending(); }
+    }
     if (document.hidden && activity === "thinking") { cancelAI(); render(); }
     if (!document.hidden && !busy) scheduleAI();
   });
@@ -594,6 +697,7 @@
     clearScheduled();
     if (viewingUpdates) {
       soundRequest++; sound.stop();
+      if (activity === "capturing") { clearCapturePresentation(); completePending(); }
       // 保留已经提交的骰点与走法，让动画链恰好收尾一次，只取消下一步与未完成的搜索。
       cancelAI();
       document.querySelectorAll("dialog[open]").forEach(dialog => dialog.close());
@@ -606,6 +710,7 @@
   });
   window.addEventListener("pagehide", () => {
     soundRequest++; sound.stop();
+    clearCapturePresentation();
     // 已提交的骰子与走法保留，只中断展示，返回页面后恰好收尾一次。
     cancelAI(); generation++; clearScheduled();
     busy = false; motion = null; activity = "idle"; rollingPlayer = null;
@@ -619,7 +724,7 @@
 
   // 只读快照用于浏览器验收，不能通过此接口写入局面或控制真实骰点。
   Object.defineProperty(window, "LudoGame", { value: Object.freeze({
-    snapshot: () => ({ state: E.cloneState(state), started, busy, difficulty, generation, revision, rollCount, captureCount, lastDie, activity, viewingUpdates, error: fatalError }),
+    snapshot: () => ({ state: E.cloneState(state), started, busy, difficulty, generation, revision, rollCount, captureCount, lastDie, activity, viewingUpdates, lastMove: lastMove ? JSON.parse(JSON.stringify(lastMove)) : null, error: fatalError }),
     diagnostics: () => lastDecision ? JSON.parse(JSON.stringify(lastDecision)) : null,
     workerStatus: () => aiClient.status()
   }), writable: false, configurable: false });

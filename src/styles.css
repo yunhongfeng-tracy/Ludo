@@ -95,16 +95,14 @@ body{background-color:#3a2016;background-image:radial-gradient(ellipse at 18% -1
   body:has(#updates-page:not([hidden])) .header-actions,body:has(#updates-page:not([hidden])) .brand>*{opacity:1}
   #game-page{padding-top:9px}.game-layout{grid-template-columns:863px 474px;gap:14px;justify-content:start;transform:none}
   .board-frame{position:relative;width:863px;height:858px;padding:0;border:0;border-radius:0;background:none;box-shadow:none;overflow:visible}
-  .board-frame{--board-texture:var(--asset-board-complete)}
-  body.playing .board-frame{--board-texture:var(--asset-board-cleanplate)}
+  .board-frame{--board-texture:var(--asset-board-cleanplate)}
   .board-art{position:absolute;inset:0;background:var(--board-texture) center/100% 100% no-repeat}
   .board-star-repairs{display:block;position:absolute;inset:0;pointer-events:none}
   .board-star-repair{position:absolute;width:44px;height:44px;background-image:var(--board-texture);background-size:863px 858px;background-repeat:no-repeat;mask-image:radial-gradient(ellipse closest-side,#000 78%,transparent 100%)}
   .board-stage{position:absolute;left:36px;top:25px;width:800px;height:800px;aspect-ratio:auto;border-radius:0;background:transparent;box-shadow:none;overflow:visible;isolation:isolate}
   .board-stage>svg{opacity:0;pointer-events:none}
   .board-stage>.board-safety{display:block;position:absolute;inset:0;opacity:1;pointer-events:none}
-  body:not(.playing) .token-layer{visibility:hidden}
-  .board-footer{height:42px;padding:11px 7px 0;font-size:14px;color:#d9c09c;text-shadow:0 1px 1px #120805;opacity:0}
+  .board-footer{display:none}
   .legend-star{font-size:27px}.tiny-arrow{font-size:24px;padding-left:7px}
 
   /* 开局前后始终使用同一套真实控件，静态纹理不含文字、计分或按钮状态。 */
@@ -178,13 +176,44 @@ body{background-color:#3a2016;background-image:radial-gradient(ellipse at 18% -1
   .restart-button::before,.restart-button::after{content:"";height:4px;border-block:1px solid #9b8158;background:none;flex:1}
   .site-footer{display:none}
 
-  .token-layer .token.red,.token-layer .token.yellow{width:54px;height:54px;border:0;border-radius:50%;background:transparent;box-shadow:none;color:#f8dfba;font-size:18px;text-shadow:0 1px #42110c}
+  :is(.token-layer,.capture-layer) .token.red,:is(.token-layer,.capture-layer) .token.yellow{width:54px;height:54px;border:0;border-radius:50%;background:transparent;box-shadow:none;color:#f8dfba;font-size:18px;text-shadow:0 1px #42110c}
   .token-face{position:relative;z-index:1;width:48px;height:48px;display:grid;place-items:center;border:2px solid #64261d;border-radius:50%;background:radial-gradient(circle at 32% 22%,#ffe2b477 0 5%,transparent 19%),repeating-linear-gradient(92deg,#4a160f28 0 1px,transparent 1px 5px),radial-gradient(circle at 42% 38%,#cf5945,#a52f25 76%);box-shadow:0 4px 0 #6a251b,0 7px 1px #32130dcc,0 9px 10px #1d0c0766,inset 0 2px 2px #ffd7aa99,inset 0 -3px 4px #5d160f88;border-radius:50%}
   .token.yellow .token-face{border-color:#6f4e19;background:radial-gradient(circle at 32% 22%,#fff3c899 0 5%,transparent 19%),repeating-linear-gradient(88deg,#5d40182b 0 1px,transparent 1px 5px),radial-gradient(circle at 42% 38%,#e0b643,#b98124 76%);box-shadow:0 4px 0 #80591d,0 7px 1px #3a260dcc,0 9px 10px #1d0c0766,inset 0 2px 2px #fff2bd,inset 0 -3px 4px #6e481588;color:#523814;text-shadow:0 1px #efd07b}
   /* 基地格已印在底图上，动态层只画圆棋子。离开基地后恢复行进路径坐标。 */
-  .token.in-yard{left:var(--yard-left)!important;top:var(--yard-top)!important}
-  .token-layer .token.stacked{width:39px;height:39px;font-size:12px}.token.stacked .token-face{width:32px;height:32px;border-width:1px;box-shadow:0 3px 0 #6a251b,0 5px 5px #24100866}.token-layer .token.finished{width:34px;height:34px;font-size:11px}.token.finished .token-face{width:28px;height:28px}
+  .token-layer .token.in-yard{left:var(--yard-left)!important;top:var(--yard-top)!important}
+  :is(.token-layer,.capture-layer) .token.stacked{width:39px;height:39px;font-size:12px}.token.stacked .token-face{width:32px;height:32px;border-width:1px;box-shadow:0 3px 0 #6a251b,0 5px 5px #24100866}.token-layer .token.finished{width:34px;height:34px;font-size:11px}.token.finished .token-face{width:28px;height:28px}
   .token.legal::before{inset:-5px;border-width:3px}.token.legal::after{top:-16px}.token.legal:hover,.token.legal:focus-visible{transform:translate(-50%,-50%) scale(1.08)}
   /* 保留 dice-roll 名称，游戏会等待此动画结束后才公布骰点。 */
   @keyframes dice-roll{0%,100%{transform:none}25%{transform:rotate(-16deg) translateY(-6px)}50%{transform:rotate(18deg) translateY(-10px)}75%{transform:rotate(-8deg) translateY(-4px)}}
 }
+
+/* 每步结果保留在棋盘附近，标记层始终位于棋子下方且不接收操作。 */
+.board-stage>.last-move-layer{position:absolute;inset:0;z-index:2;opacity:1;pointer-events:none;overflow:visible}
+.last-move-mark,.token.red{--move-ink:#96392d}
+.last-move-mark.yellow,.token.yellow{--move-ink:#8a671e}
+.last-move-mark rect{fill:none;stroke:var(--move-ink);stroke-width:1.8;vector-effect:non-scaling-stroke;stroke-linejoin:round}
+.last-move-mark .move-origin{stroke-dasharray:3 3;opacity:.7}
+.last-move-mark .move-destination{fill:#fff4d41f;stroke-width:2.5;paint-order:stroke fill}
+.token-layer{z-index:3}
+.token-layer .token.last-moved:not(.legal)::before{content:"";position:absolute;inset:-3px;border:1.5px solid #f7e6bf;border-radius:50%;background:none;box-shadow:0 0 0 2px var(--move-ink);pointer-events:none;animation:none}
+.token-layer .token.last-moved:not(.legal)::after{content:"";position:absolute;right:-5px;bottom:-3px;width:6px;height:6px;border:1px solid #f7e6bf;border-radius:1px;background:var(--move-ink);transform:rotate(45deg);pointer-events:none}
+.capture-layer{position:absolute;inset:0;z-index:12;pointer-events:none}
+.token.capture-hidden{visibility:hidden!important;transition:none!important}
+.capture-layer .capture-ghost{pointer-events:none!important;transition:none;filter:drop-shadow(0 3px 4px #25100655);will-change:transform,left,top,opacity}
+.capture-layer .capture-ghost::before{content:"";position:absolute;inset:-3px;border:2px solid #f4deb7bb;border-radius:50%;box-shadow:0 0 0 1px #6b382566;pointer-events:none;animation:none}
+.capture-layer .capture-ghost::after{display:none}
+.move-feedback{display:flex;align-items:center;gap:10px;height:54px;margin:10px 0 0;padding:8px 12px;border:1px solid #aa835380;border-radius:4px;background:linear-gradient(110deg,#f1dfbd,#d9bd91);box-shadow:inset 0 1px #fff2d580,0 3px 9px #1b0c0826;color:#493323;font-family:var(--serif);font-size:12px;font-weight:600;line-height:1.6;overflow-anchor:none}
+.move-feedback::before{content:"上一步";flex-shrink:0;padding-right:10px;border-right:1px solid #98744499;color:#84613d;font-size:10px;font-weight:400;letter-spacing:1px}
+.move-feedback[data-kind="safe"]::before{content:"安全格";color:#485b3d}
+.move-feedback[data-kind="capture"]::before{content:"吃子";color:#943d2e}
+.move-feedback[data-kind="finish"]::before{content:"到家";color:#88671d}
+.move-feedback[data-kind="ready"]::before{content:"棋盘"}
+.move-feedback:empty{visibility:hidden}
+@media(min-width:1200px){.move-feedback{height:42px;margin-top:0;padding:6px 14px;font-size:14px;border-top:0;border-radius:0 0 4px 4px}.move-feedback::before{font-size:11px}}
+/* 入场动画留下的 transform 会改变手机 fixed 操作栏的定位容器。 */
+@media(max-width:780px){
+  .game-sidebar{animation:none}
+  body.playing .turn-panel{background-color:#ead7af;background-image:linear-gradient(125deg,#f1dfbb,#dfc69a)}
+  body.playing .mobile-restart,body.playing .turn-eyebrow>span:nth-child(2){color:#71583f}
+}
+@media(max-width:390px){.move-feedback{gap:8px;padding-inline:9px;font-size:11px}.move-feedback::before{padding-right:8px;font-size:9px}}

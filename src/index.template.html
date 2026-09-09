@@ -27,8 +27,19 @@
       <div class="game-layout">
         <section class="board-panel" aria-label="Ludo 棋盘">
           <div class="board-heading"><span class="board-title">经典纸板棋盘 <span>01</span></span><span class="turn-badge" id="turn-badge"><i></i>等待开局</span></div>
-          <div class="board-frame"><div class="board-art" aria-hidden="true"></div><div class="board-star-repairs" id="board-star-repairs" aria-hidden="true"></div><div class="board-stage" id="board-stage"><svg id="board-svg" viewBox="0 0 600 600" aria-hidden="true"></svg><svg class="board-safety" id="board-safety" viewBox="0 0 600 600" aria-hidden="true"></svg><div id="token-layer" class="token-layer"></div></div></div>
+          <div class="board-frame">
+            <div class="board-art" aria-hidden="true"></div>
+            <div class="board-star-repairs" id="board-star-repairs" aria-hidden="true"></div>
+            <div class="board-stage" id="board-stage">
+              <svg id="board-svg" viewBox="0 0 600 600" aria-hidden="true"></svg>
+              <svg class="board-safety" id="board-safety" viewBox="0 0 600 600" aria-hidden="true"></svg>
+              <svg id="last-move-layer" class="last-move-layer" viewBox="0 0 600 600" aria-hidden="true"></svg>
+              <div id="token-layer" class="token-layer"></div>
+              <div id="capture-layer" class="capture-layer" aria-hidden="true"></div>
+            </div>
+          </div>
           <div class="board-footer"><span><span class="legend-star" aria-hidden="true">☆</span>安全格，棋子不会被吃</span><span>四枚棋子到家，即获胜<span class="tiny-arrow" aria-hidden="true">↗</span></span></div>
+          <p id="move-feedback" class="move-feedback" role="note" aria-label="上一步行动结果"></p>
         </section>
 
         <aside class="game-sidebar" aria-label="对局操作">

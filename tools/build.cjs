@@ -31,7 +31,6 @@ const releasesHtml = history.releases.map((release, index) => {
 let html = read("src/index.template.html");
 html = html.replaceAll("<!--__VERSION__-->", escapeHtml(version)).replace("<!--__RELEASES__-->", () => releasesHtml);
 const visualAssets = {
-  "board-complete": "src/assets/vintage/board-complete.png",
   "board-cleanplate": "src/assets/vintage/board-cleanplate.png",
   "outer-chrome": "src/assets/vintage/outer-chrome.png",
   "paper-texture": "src/assets/vintage/paper-texture.png",
